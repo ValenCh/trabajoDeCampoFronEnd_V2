@@ -1,0 +1,165 @@
+/* ========================================
+   SUBNAV PERSONAL - Accordion vertical
+   ======================================== */
+.subnav-personal-vertical {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.subnav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.subnav-list-item {
+    margin-bottom: 0.25rem;
+}
+
+/* Botones principales del subnav */
+.subnav-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-left: 3px solid transparent;
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.subnav-button i:first-child {
+    font-size: 0.9rem;
+    width: 18px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.subnav-button span {
+    flex: 1;
+}
+
+.subnav-chevron {
+    font-size: 0.7rem;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.subnav-chevron.rotated {
+    transform: rotate(180deg);
+}
+
+.subnav-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-left-color: rgba(99, 102, 241, 0.4);
+    padding-left: 1.75rem;
+}
+
+.subnav-button.active {
+    background: rgba(99, 102, 241, 0.15);
+    border-left-color: #6366f1;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Submenú (Becarios) */
+.subnav-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subnav-submenu.expanded {
+    max-height: 500px;
+}
+
+.subnav-submenu li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.subnav-submenu li:last-child {
+    border-bottom: none;
+}
+
+.subnav-submenu-button {
+    width: 100%;
+    display: block;
+    padding: 0.65rem 1.5rem 0.65rem 3rem;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    color: #9ca3af;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.subnav-submenu-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(99, 102, 241, 0.3);
+    color: #d1d5db;
+    padding-left: 3.25rem;
+}
+
+.subnav-submenu-button.active {
+    background: rgba(99, 102, 241, 0.1);
+    border-left-color: #6366f1;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 991px) {
+    .subnav-button {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    .subnav-submenu-button {
+        padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .subnav-submenu.expanded {
+        max-height: 600px;
+    }
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subnav-submenu.expanded li {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.subnav-submenu.expanded li:nth-child(1) { animation-delay: 0.05s; }
+.subnav-submenu.expanded li:nth-child(2) { animation-delay: 0.1s; }
+.subnav-submenu.expanded li:nth-child(3) { animation-delay: 0.15s; }
+.subnav-submenu.expanded li:nth-child(4) { animation-delay: 0.2s; }
+.subnav-submenu.expanded li:nth-child(5) { animation-delay: 0.25s; }
+.subnav-submenu.expanded li:nth-child(6) { animation-delay: 0.3s; }

@@ -1,0 +1,208 @@
+/* =============================================
+   GrupoForm.css
+   Estilos específicos del formulario de grupos.
+   Reutiliza las clases base de CuerpoModal.css
+   (form-input, form-label, form-error, etc.)
+   ============================================= */
+
+/* ── Layout del form ── */
+.grupo-form {
+  width: 100%;
+}
+
+.grupo-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.grupo-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grupo-form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ── Label ── */
+.grupo-form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.grupo-form-label .req {
+  color: #d32f2f;
+}
+
+/* ── Inputs base (heredan .form-input de CuerpoModal.css) ── */
+.grupo-input {
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.grupo-input:focus {
+  outline: none;
+  border-color: #5a7fa8;
+  box-shadow: 0 0 0 3px rgba(90, 127, 168, 0.15);
+}
+
+.grupo-input:disabled {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* Campo modificado (modo edición) */
+.grupo-input.changed {
+  border-color: #2196f3;
+  background-color: #e8f4fd;
+}
+
+/* ── Select específico ── */
+.grupo-select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23555' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.grupo-select:disabled {
+  background-image: none;
+  cursor: not-allowed;
+}
+
+/* Estado de carga del select */
+.grupo-select.loading-select {
+  color: #999;
+  font-style: italic;
+}
+
+/* ── Textarea ── */
+.grupo-textarea {
+  resize: vertical;
+  min-height: 90px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* ── Organigrama (file input estilizado) ── */
+.organigrama-wrapper {
+  position: relative;
+}
+
+.organigrama-file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.organigrama-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: border-color 0.2s, background-color 0.2s;
+  font-size: 0.88rem;
+  color: #555;
+}
+
+.organigrama-label:hover {
+  border-color: #5a7fa8;
+  background-color: #f0f5fa;
+}
+
+.organigrama-label.has-file {
+  border-color: #5a7fa8;
+  background-color: #f0f5fa;
+  color: #2a5a8a;
+}
+
+.organigrama-label.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.organigrama-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.organigrama-filename {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* TODO: cuando el backend defina si es binario o URL,
+   cambiar .organigrama-wrapper por el input de archivo real
+   o un input de texto según corresponda. */
+
+/* ── Error ── */
+.grupo-form-error {
+  color: #d32f2f;
+  font-size: 0.78rem;
+}
+
+/* ── Hint de valor original (modo edición) ── */
+.grupo-original-hint {
+  font-size: 0.74rem;
+  color: #888;
+  font-style: italic;
+}
+
+/* ── Estado cargando personas ── */
+.grupo-personas-loading {
+  font-size: 0.82rem;
+  color: #888;
+  padding: 8px 0;
+  font-style: italic;
+}
+
+/* ── Sección separadora visual ── */
+.grupo-form-section-title {
+  grid-column: 1 / -1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #888;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 4px;
+  margin-top: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .grupo-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .grupo-form-field.full-width {
+    grid-column: 1;
+  }
+  .grupo-form-section-title {
+    grid-column: 1;
+  }
+}

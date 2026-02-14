@@ -1,0 +1,19 @@
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 70px; /* Ancho del sidebar colapsado */
+    min-height: 100vh;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive para tablets y móviles */
+@media (max-width: 991px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
