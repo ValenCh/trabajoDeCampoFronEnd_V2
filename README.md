@@ -1,16 +1,110 @@
-# React + Vite
+# Configuración del Proyecto
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tener instalado:
+- _PostgreSQL:_
+_Cuando se instala postgresql instalar pgAdmin4_
+```
+https://www.postgresql.org/
+```
 
-Currently, two official plugins are available:
+- _Postman_
+```
+https://www.postman.com/
+```
+- _(Recomendado) IntelliJ IDEA_
+```
+https://www.jetbrains.com/idea/
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- _Maven_
+```
+https://www.youtube.com/watch?v=rl5-yyrmp-0 
+```
+- _Java_
 
-## React Compiler
+## Java / JDK
+- **Versión:** 17.0.12 LTS  
+- **Fecha de lanzamiento:** 2024-07-16
+_Link de la version:_
+```
+https://download.oracle.com/java/17/archive/jdk-17.0.12_windows-x64_bin.exe
+```
+## Spring Boot
+- **Puerto de la aplicación:** [http://localhost:8081]
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Frontend
+- **Puerto de la aplicación:** [http://localhost:3000]
 
-## Expanding the ESLint configuration
+## Base de datos PostgreSQL
+- **Nombre de la DB:** grupo7_db  
+- **Contraseña:** 8080  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Puerto de la aplicación:** [http://localhost:5432]
+
+## Instalacion de dependencias 
+_En el frontEnd ejecutar en la terminal:_
+### `npm install`
+
+_Solucion error react scripts is not recognized as an internal or external command_
+- Eliminar la linea `"react-scripts": "0.0.0"` en package.json 
+- Luego ejecutar `npm install react-scripts --save`
+- Finalmente verificar que aparezca `"react-scripts": "5.0.1"`
+
+## Dependencias pom
+
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+
+## plugins pom
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+## Postman 
+_(Hay que tener la base de datos corriendo)_
+
+### Registrar Usuario 
+`POST` http://localhost:8081/auth/register
+
+- _En `Body` seleccionar raw y JSON_
+	_Ingresar en raw:_
+	{
+  		"email": "mail@gmail.com",
+  		"password": "contraseña"
+	}
+
+### Logear Usuario
+`POST` http://localhost:8081/auth/login
+
+- _En `Body` seleccionar raw y JSON_
+	_Ingresar en raw:_
+	{
+  		"email": "mail@gmail.com",
+  		"password": "contraseña"
+	}

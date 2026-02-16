@@ -156,18 +156,17 @@ const Sidebar = ({ onLogOut }) => {
                     </Link>
                    */}
                     {isExpanded && (
-                        <Link className='homeLink' to="/" onClick={closeMobileSidebar}>
-                            <div className="sidebar-profile">                            
-                                <div className="profile-avatar">    
-                                    <i className="fa-solid fa-user"></i>
-                                </div>                            
-                                <div className="profile-info">
-                                    <span className="profile-name"><p>{usuario.email}</p></span>
-                                    <span className="profile-group">{usuario.grupo || ""}</span>
-                                    <span className="profile-role">{usuario.rol || 'Usuario'}</span>
-                                </div>
+                      
+                        <div className="sidebar-profile">                            
+                            <div className="profile-avatar">    
+                                <i className="fa-solid fa-user"></i>
+                            </div>                            
+                            <div className="profile-info">
+                                <span className="profile-name"><p>{usuario.email}</p></span>
+                                <span className="profile-group">{usuario.grupo || ""}</span>
+                                <span className="profile-role">{usuario.rol || 'Usuario'}</span>
                             </div>
-                        </Link>
+                        </div>
 
                     )}
 

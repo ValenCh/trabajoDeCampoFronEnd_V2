@@ -14,8 +14,26 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
         }
     };
 
+    const closeMobileSidebar = () => {
+        setIsMobileOpen(false);
+    };
+
     return (
         <ul className="navbar-nav secciones">
+
+            <li className="nav-item">
+                <Link
+                    className='homeLink' 
+                    to={"/"} 
+                    onClick={closeMobileSidebar}
+                    data-tooltip="Inicio"
+                >
+                        <i className="fa-solid fa-house"></i>
+                        <span>Inicio</span>
+                </Link>
+
+            </li>
+
             <li className="nav-item">
                 <Link 
                     className="nav-link" 

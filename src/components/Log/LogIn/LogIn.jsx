@@ -23,16 +23,17 @@ export default function Login({ setUsuario }) {
 
       console.log("✅ Respuesta recibida - Status:", response.status);
 
-      // ⭐ SOLUCIÓN: Primero obtener como texto
-      const data = await response.text();
+      // Parsear la respuesta como JSON
+      const data = await response.json();
       console.log("📝 Respuesta del servidor:", data);
 
-      // Si el servidor responde ok
-      if (response.ok && data.startsWith("Login exitoso")) {
+      // Si el servidor responde ok y trae el token
+      if (response.ok && data.token) {
         const datosUsuario = { 
           email: email,
-          rol: "Rol",
+          rol: data.role || "Sin rol",
           grupo: "Sin grupo",
+          token: data.token,
           loggedIn: true
         };
         
@@ -44,7 +45,7 @@ export default function Login({ setUsuario }) {
         setAlert({
           type: 'error',
           title: 'Error de Inicio de Sesión',
-          message: data || 'Error desconocido'
+          message: data?.message || 'Error desconocido'
         });
       }
 

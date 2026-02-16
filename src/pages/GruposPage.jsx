@@ -20,6 +20,16 @@ import AgregarGrupo from '../assets/agregarGrupo.png';
 const GRUPOS_POR_PAGINA = 6;
 const ENDPOINT_BASE = 'http://localhost:8081/AdministracionController/grupos';
 
+// ─── Helper: headers con JWT ──────────────────────────────────────────────────
+const getAuthHeaders = (extraHeaders = {}) => {
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${usuario.token}`,
+    ...extraHeaders,
+  };
+};
+
 // ─── Componente de información del grupo (modal Ver) ─────────────────────────
 const InfoGrupo = ({ grupo }) => (
   <div className="grupo-info-grid">
@@ -91,7 +101,9 @@ const GroupsPage = () => {
   const fetchGrupos = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${ENDPOINT_BASE}/listarGrupos`);
+      const response = await fetch(`${ENDPOINT_BASE}/listarGrupos`, {
+        headers: getAuthHeaders(),
+      });
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText || `Error HTTP ${response.status}`);
@@ -147,7 +159,10 @@ const GroupsPage = () => {
     try {
       const response = await fetch(
         `${ENDPOINT_BASE}/eliminarGrupo/${grupoAEliminar}`,
-        { method: 'DELETE' }
+        {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        }
       );
       if (!response.ok) {
         const errorText = await response.text();
@@ -167,7 +182,7 @@ const GroupsPage = () => {
     try {
       const response = await fetch(`${ENDPOINT_BASE}/crearGrupo`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(formData),
       });
       if (!response.ok) {
@@ -189,7 +204,7 @@ const GroupsPage = () => {
         `${ENDPOINT_BASE}/editarGrupo/${modalEditar.oidGrupo}`,
         {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAuthHeaders(),
           body: JSON.stringify(formData),
         }
       );
@@ -313,10 +328,6 @@ const GroupsPage = () => {
             initialData={modalEditar}
             onSubmit={handleGuardarEdicion}
             showComparison
-            /*
-              Para deshabilitar un campo en el futuro, pasar por ejemplo:
-              disabled={{ sigla: true, email: true }}
-            */
           />
         </Modal>
       )}
