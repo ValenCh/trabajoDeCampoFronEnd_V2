@@ -18,9 +18,10 @@
 .alerta-contenedor {
   background: white;
   border-radius: 1.5rem;
-  padding: 4rem 1rem 1rem 1rem;
+  padding: 7.5rem 1.5rem 2rem 1.5rem;
   text-align: center;
-  width: 320px;
+  width: 30%;
+  height: 40%;
   position: relative;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   display: flex;
@@ -38,21 +39,30 @@
 .alerta-icono {
   display: flex;
   justify-content: center;
+  align-items: center;
+
   margin-bottom: 1rem;
+
   position: absolute;
-  top: -35%;
-  left: 0%;
+  top: 14px;   /* antes: -35% */
+  left: 0;
+
   width: 100%;
-  z-index: 10002; /* ✅ Asegura que el ícono esté por encima */
+
+  z-index: 10002;
+
+  background: transparent;
 }
 
 .alerta-img {
-  margin: 0;
-  padding: 0;
-  max-height: 10rem;
-  max-width: 10rem;
-  width: auto;
-  height: auto;
+  width: 30%;
+  height: 30%;
+
+  max-width: 19%;
+  max-height: 19%;
+
+  object-fit: contain;
+  display: block;
 }
 
 .alerta-cerrar {
@@ -107,19 +117,7 @@
   background-color: #BFBFBF;
 }
 
-/* Colores según tipo */
-.alerta-overlay.advertencia .alerta-footer {
-  background-color: #f1e77e;
-}
-.alerta-overlay.error .alerta-footer {
-  background-color: #e57373;
-}
-.alerta-overlay.exito .alerta-footer {
-  background-color: #81c784;
-}
-.alerta-overlay.info .alerta-footer {
-  background-color: #64b5f6;
-}
+
 
 /* Responsive */
 @media (max-width: 480px) {

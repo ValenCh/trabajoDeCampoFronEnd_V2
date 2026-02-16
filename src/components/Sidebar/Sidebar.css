@@ -5,12 +5,12 @@
     --sidebar-width-collapsed: 70px;
     --sidebar-width-expanded: 280px;
     --sidebar-bg: #1f2937;
-    --sidebar-bg-secondary: #111827;
+    --sidebar-bg-secondary: #111827a9;
     --sidebar-text: #ffffff;
     --sidebar-text-secondary: #9ca3af;
     --sidebar-hover: rgba(255, 255, 255, 0.1);
     --sidebar-active: rgba(99, 102, 241, 0.2);
-    --sidebar-border: rgba(255, 255, 255, 0.05);
+    --sidebar-border: rgba(251, 15, 15, 0.05);
     --sidebar-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     --transition-speed: 0.3s;
 }
@@ -79,6 +79,7 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
+
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     display: flex;
     align-items: center;
@@ -88,6 +89,7 @@
     flex-shrink: 0;
     cursor: pointer;
     transition: transform 0.3s ease;
+    transform: translateY(28.3px);
 }
 
 .profile-avatar-collapsed:hover {
