@@ -1,0 +1,81 @@
+/* =============================================
+   DATA TABLE - Componente reutilizable
+   Estilos base para cualquier tabla de datos
+   ============================================= */
+
+/* ---- Wrapper de la tabla ---- */
+.data-table-wrapper {
+  background: rgba(160, 173, 188, 0.75);
+  border-radius: 16px;
+  overflow: hidden;
+  flex: 1;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Tabla base ---- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* ---- Cabecera ---- */
+.data-table thead tr {
+  background: rgba(120, 135, 150, 0.6);
+}
+
+.data-table thead th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* ---- Filas del cuerpo ---- */
+.data-table tbody tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.15s;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.data-table tbody tr.clickable-row {
+  cursor: pointer;
+}
+
+.data-table tbody td {
+  padding: 0.9rem 1.25rem;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  vertical-align: middle;
+}
+
+/* ---- Fila vacía ---- */
+.data-table-empty-row td {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  padding: 2.5rem 1rem;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 0.75rem 0.9rem;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .data-table-wrapper {
+    border-radius: 10px;
+  }
+}

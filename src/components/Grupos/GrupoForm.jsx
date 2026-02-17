@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { construirHeaders } from '../../config/permissions';  // ✅ AGREGADO
 import './GrupoForm.css';
 
 const ENDPOINT_PERSONAS = 'http://localhost:8081/AdministracionController/personas/listarPersonas';
@@ -7,29 +8,10 @@ const ENDPOINT_PERSONAS = 'http://localhost:8081/AdministracionController/person
  * GrupoForm
  *
  * Formulario unificado para CREAR y EDITAR un grupo.
- * Maneja su propio fetch de personas para los selects de director/vice-director.
- * Los dos selects están cruzados: no se puede elegir la misma persona en ambos.
- *
- * Props:
- *  - initialData: object   → datos precargados (edición). Vacío = creación.
- *  - onSubmit: function    → recibe el objeto de datos del form al confirmar
- *  - formId: string        → id del <form> para dispatchEvent desde el Modal padre
- *  - disabled: object      → mapa de campos deshabilitados: { nombreGrupo: true, ... }
- *                            Por defecto todos habilitados.
- *                            Ejemplo para bloquear solo la sigla:
- *                            disabled={{ sigla: true }}
- *  - showComparison: bool  → si es true, marca los campos modificados (modo edición)
- *
- * Campos del formulario:
- *  - nombreGrupo   (texto, requerido)
- *  - sigla         (texto, requerido)
- *  - email         (email, requerido)
- *  - director      (select de personas, opcional)
- *  - viceDirector  (select de personas, opcional)
- *  - objetivos     (textarea, opcional)
- *  - organigrama   (texto URL/path, opcional)
- *                  // TODO: cambiar a input tipo file cuando el backend defina
- *                  // si espera binario (multipart/form-data) o URL como texto.
+ * 
+ * ✅ CORRECCIÓN APLICADA:
+ * - Fetch de personas ahora incluye headers JWT
+ * - Soluciona el error 403 Forbidden al cargar personas
  */
 const GrupoForm = ({
   initialData = {},
@@ -43,8 +25,8 @@ const GrupoForm = ({
     nombreGrupo:  initialData.nombreGrupo  || '',
     sigla:        initialData.sigla        || '',
     email:        initialData.email        || '',
-    director:     initialData.director     || '',  // almacena oidPersona
-    viceDirector: initialData.viceDirector || '',  // almacena oidPersona
+    director:     initialData.director     || '',
+    viceDirector: initialData.viceDirector || '',
     objetivos:    initialData.objetivos    || '',
     organigrama:  initialData.organigrama  || '',
   });
@@ -57,17 +39,31 @@ const GrupoForm = ({
   const [loadingPersonas, setLoadingPersonas] = useState(true);
   const [errorPersonas, setErrorPersonas]   = useState(null);
 
-  // ── Fetch de personas ──
+  // ── Fetch de personas con JWT ──
   useEffect(() => {
     const cargarPersonas = async () => {
       setLoadingPersonas(true);
       setErrorPersonas(null);
       try {
-        const res = await fetch(ENDPOINT_PERSONAS);
-        if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+        console.log('📋 Cargando lista de personas...');
+        
+        // ✅ CAMBIO CRÍTICO: Agregar headers con JWT
+        const res = await fetch(ENDPOINT_PERSONAS, {
+          method: 'GET',
+          headers: construirHeaders()  // ← ESTO FALTABA
+        });
+        
+        console.log('📨 Response status:', res.status);
+        
+        if (!res.ok) {
+          throw new Error(`Error HTTP ${res.status}`);
+        }
+        
         const data = await res.json();
+        console.log('✅ Personas cargadas:', data.length);
         setPersonas(data);
       } catch (err) {
+        console.error('❌ Error al cargar personas:', err);
         setErrorPersonas('No se pudo cargar la lista de personas.');
       } finally {
         setLoadingPersonas(false);
@@ -77,12 +73,9 @@ const GrupoForm = ({
   }, []);
 
   // ── Helpers ──
-
-  // Construye el nombre completo para mostrar en el select
   const nombreCompleto = (persona) =>
     `${persona.nombre || ''} ${persona.apellido || ''}`.trim();
 
-  // Determina si un campo fue modificado respecto al valor original
   const fueModificado = (campo) =>
     showComparison && formData[campo] !== originalData.current[campo];
 
@@ -111,7 +104,6 @@ const GrupoForm = ({
       }
     }
 
-    // Si eligieron director y vice, no pueden ser la misma persona
     if (
       formData.director &&
       formData.viceDirector &&
@@ -127,16 +119,19 @@ const GrupoForm = ({
   // ── Submit ──
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    console.log('📝 Validando formulario...');
+    if (!validate()) {
+      console.log('❌ Validación fallida:', errors);
+      return;
+    }
+    console.log('✅ Formulario válido, enviando datos:', formData);
     onSubmit(formData);
   };
 
-  // ── Opciones filtradas para cada select ──
-  // Director: excluye al vice-director actualmente elegido
+  // ── Opciones filtradas ──
   const opcionesDirector = personas.filter(
     (p) => String(p.oidPersona) !== String(formData.viceDirector)
   );
-  // Vice-director: excluye al director actualmente elegido
   const opcionesVice = personas.filter(
     (p) => String(p.oidPersona) !== String(formData.director)
   );
@@ -241,7 +236,7 @@ const GrupoForm = ({
         {/* ── SECCIÓN: Autoridades ── */}
         <div className="grupo-form-section-title">Autoridades</div>
 
-        {/* Estado de carga / error de personas */}
+        {/* Estado de carga */}
         {loadingPersonas && (
           <div className="grupo-form-field full-width">
             <p className="grupo-personas-loading">
@@ -325,7 +320,6 @@ const GrupoForm = ({
           </div>
         )}
 
-        {/* Placeholder para el segundo campo de la fila si personas no cargaron */}
         {(loadingPersonas || errorPersonas) && (
           <div className="grupo-form-field" />
         )}
@@ -358,10 +352,6 @@ const GrupoForm = ({
         </div>
 
         {/* Organigrama */}
-        {/* TODO: cuando el backend defina si espera archivo binario (multipart/form-data)
-            o URL/path como texto, cambiar este campo:
-            - Si es archivo binario → cambiar type="text" por type="file" y usar FormData en el submit
-            - Si es URL → queda como está */}
         <div className="grupo-form-field full-width">
           <label htmlFor="gf-organigrama" className="grupo-form-label">
             Organigrama

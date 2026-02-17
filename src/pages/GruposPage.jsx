@@ -1,364 +1,458 @@
-import React, { useState, useEffect } from 'react';
-
-// Componentes de la tabla
-import GroupsSearch from '../components/Grupos/GruposSearch';
-import GroupsTable from '../components/Grupos/GruposTable';
-import GroupsPagination from '../components/Grupos/GruposPaginacion';
+import React, { useState, useEffect, useCallback } from 'react';
+import GruposSearch from '../components/Grupos/GruposSearch';
+import GruposPaginacion from '../components/Grupos/GruposPaginacion';
+import GruposTable from '../components/Grupos/GruposTable';
 import GrupoForm from '../components/Grupos/GrupoForm';
+import Modal from '../components/Modal/Modal';
+import { 
+  obtenerEndpointsGrupos, 
+  obtenerPermisos, 
+  obtenerUsuario,
+  construirHeaders,  // ✅ AGREGADO: Import crítico para JWT
+  esAdministrador,
+  necesitaTabla
+} from '../config/permissions';
 import '../components/Grupos/Grupos.css';
-
-// Sistema de modales existente
-import { Modal, CuerpoModalInfo } from '../components/Modal';
-
-// Sistema de alertas existente
-import Alerta from '../components/Alertas/Alertas';
-
-// Assets existentes
 import AgregarGrupo from '../assets/agregarGrupo.png';
 
-// ─── Constantes ───────────────────────────────────────────────────────────────
-const GRUPOS_POR_PAGINA = 6;
-const ENDPOINT_BASE = 'http://localhost:8081/AdministracionController/grupos';
-
-// ─── Helper: headers con JWT ──────────────────────────────────────────────────
-const getAuthHeaders = (extraHeaders = {}) => {
-  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${usuario.token}`,
-    ...extraHeaders,
-  };
-};
-
-// ─── Componente de información del grupo (modal Ver) ─────────────────────────
-const InfoGrupo = ({ grupo }) => (
-  <div className="grupo-info-grid">
-    <div className="grupo-info-item">
-      <span className="grupo-info-label">Nº Grupo</span>
-      <span className="grupo-info-value">{grupo.oidGrupo}</span>
-    </div>
-    <div className="grupo-info-item">
-      <span className="grupo-info-label">Sigla Facultad</span>
-      <span className="grupo-info-value">{grupo.sigla || '—'}</span>
-    </div>
-    <div className="grupo-info-item full-width">
-      <span className="grupo-info-label">Nombre</span>
-      <span className="grupo-info-value">{grupo.nombreGrupo}</span>
-    </div>
-    <div className="grupo-info-item full-width">
-      <span className="grupo-info-label">Email</span>
-      <span className="grupo-info-value">{grupo.email || '—'}</span>
-    </div>
-    <div className="grupo-info-item">
-      <span className="grupo-info-label">Director</span>
-      <span className="grupo-info-value">{grupo.director || 'No asignado'}</span>
-    </div>
-    <div className="grupo-info-item">
-      <span className="grupo-info-label">Vice-Director</span>
-      <span className="grupo-info-value">{grupo.viceDirector || 'No asignado'}</span>
-    </div>
-    {grupo.objetivos && (
-      <div className="grupo-info-item full-width">
-        <span className="grupo-info-label">Objetivos</span>
-        <span className="grupo-info-value" style={{ whiteSpace: 'pre-wrap' }}>
-          {grupo.objetivos}
-        </span>
-      </div>
-    )}
-    {grupo.organigrama && (
-      <div className="grupo-info-item full-width">
-        <span className="grupo-info-label">Organigrama</span>
-        <span className="grupo-info-value">{grupo.organigrama}</span>
-      </div>
-    )}
-  </div>
-);
-
-// ─── Página principal ─────────────────────────────────────────────────────────
-const GroupsPage = () => {
-  // ── Estado de datos ──
-  const [grupos, setGrupos]   = useState([]);
+/**
+ * GruposPage
+ * 
+ * Página principal de gestión de grupos con permisos por rol.
+ * 
+ * ✅ CORRECCIÓN APLICADA:
+ * - Todas las peticiones fetch ahora incluyen construirHeaders()
+ * - Esto agrega el token JWT en el header Authorization
+ * - Soluciona el error 403 Forbidden
+ */
+const GruposPage = () => {
+  // ═══════════════════════════════════════════════════════════════════════
+  // ESTADO Y CONFIGURACIÓN
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  const usuario = obtenerUsuario();
+  const permisos = obtenerPermisos(usuario.role);
+  const endpoints = obtenerEndpointsGrupos(usuario.role);
+  
+  // Estado de datos
+  const [grupos, setGrupos] = useState([]);
+  const [grupoUnico, setGrupoUnico] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // ── Estado de búsqueda y paginación ──
-  const [busqueda, setBusqueda]       = useState('');
+  const [error, setError] = useState(null);
+  
+  // Estado de búsqueda y paginación
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPorPagina = 10;
+  
+  // Estado de modales
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    mode: null, // 'ver' | 'crear' | 'editar'
+    grupo: null
+  });
 
-  // ── Estado de alertas ──
-  const [alert, setAlert] = useState(null);
-
-  // ── Estado de modales ──
-  const [modalVer, setModalVer]       = useState(null);   // grupo para ver
-  const [modalEditar, setModalEditar] = useState(null);   // grupo para editar
-  const [modalCrear, setModalCrear]   = useState(false);  // abrir/cerrar crear
-  const [grupoAEliminar, setGrupoAEliminar] = useState(null); // id en espera
-
-  // ─── Fetch inicial ────────────────────────────────────────────────────────
-  useEffect(() => {
-    fetchGrupos();
-  }, []);
-
-  const fetchGrupos = async () => {
+  // ═══════════════════════════════════════════════════════════════════════
+  // CARGA DE DATOS
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  /**
+   * ✅ CORREGIDO: Ahora incluye construirHeaders() para autenticación JWT
+   */
+  const cargarGrupos = useCallback(async () => {
     setLoading(true);
+    setError(null);
+    
     try {
-      const response = await fetch(`${ENDPOINT_BASE}/listarGrupos`, {
-        headers: getAuthHeaders(),
+      // Determinar endpoint según permisos
+      const url = permisos.verTodos 
+        ? endpoints.LISTAR 
+        : endpoints.VER;
+
+      console.log('📡 Cargando grupos desde:', url);
+
+      // ✅ CAMBIO CRÍTICO: Agregar headers con JWT
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: construirHeaders()  // ← ESTO FALTABA
       });
+
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || `Error HTTP ${response.status}`);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
+
       const data = await response.json();
-      setGrupos(data);
-    } catch (error) {
-      setAlert({
-        type: 'advertencia',
-        title: 'Error al cargar grupos',
-        message: error.message || 'Error desconocido',
-      });
+      console.log('✅ Datos recibidos:', data);
+      
+      if (permisos.verTodos) {
+        setGrupos(Array.isArray(data) ? data : []);
+        setTotalPages(Math.ceil((Array.isArray(data) ? data.length : 0) / itemsPorPagina));
+      } else {
+        setGrupoUnico(data);
+      }
+    } catch (err) {
+      console.error('❌ Error al cargar grupos:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [permisos, endpoints, itemsPorPagina]);
 
-  // ─── Filtrado local ───────────────────────────────────────────────────────
-  const gruposFiltrados = grupos.filter((g) => {
-    const texto = busqueda.trim().toLowerCase();
-    if (!texto) return true;
-    const coincideId     = String(g.oidGrupo).includes(texto);
-    const coincideNombre = g.nombreGrupo?.toLowerCase().includes(texto);
-    return coincideId || coincideNombre;
+  useEffect(() => {
+    cargarGrupos();
+  }, [cargarGrupos]);
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // BÚSQUEDA Y PAGINACIÓN
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  const gruposFiltrados = grupos.filter((grupo) => {
+    if (!searchTerm) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      grupo.nombreGrupo?.toLowerCase().includes(search) ||
+      grupo.sigla?.toLowerCase().includes(search) ||
+      String(grupo.oidGrupo).includes(searchTerm)
+    );
   });
 
-  const handleBusqueda = (valor) => {
-    setBusqueda(valor);
+  const gruposPaginados = gruposFiltrados.slice(
+    (currentPage - 1) * itemsPorPagina,
+    currentPage * itemsPorPagina
+  );
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
     setCurrentPage(1);
   };
 
-  // ─── Paginación ───────────────────────────────────────────────────────────
-  const totalPages    = Math.ceil(gruposFiltrados.length / GRUPOS_POR_PAGINA);
-  const indexInicio   = (currentPage - 1) * GRUPOS_POR_PAGINA;
-  const gruposPagina  = gruposFiltrados.slice(indexInicio, indexInicio + GRUPOS_POR_PAGINA);
-
-  // ─── Acciones ────────────────────────────────────────────────────────────
-  const handleVer     = (grupo) => setModalVer(grupo);
-  const handleEditar  = (grupo) => setModalEditar(grupo);
-
-  const handleEliminar = (oidGrupo) => {
-    setGrupoAEliminar(oidGrupo);
-    setAlert({
-      type: 'advertencia',
-      title: 'Eliminar grupo',
-      message: '¿Estás seguro de que deseas eliminar este grupo? Esta acción no se puede deshacer.',
-    });
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
-  const confirmarEliminar = async () => {
-    setAlert(null);
-    if (!grupoAEliminar) return;
-    try {
-      const response = await fetch(
-        `${ENDPOINT_BASE}/eliminarGrupo/${grupoAEliminar}`,
-        {
-          method: 'DELETE',
-          headers: getAuthHeaders(),
-        }
-      );
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `Error HTTP ${response.status}`);
-      }
-      setGrupos((prev) => prev.filter((g) => g.oidGrupo !== grupoAEliminar));
-      setAlert({ type: 'exito', title: 'Grupo eliminado', message: 'El grupo fue eliminado correctamente.' });
-    } catch (error) {
-      setAlert({ type: 'error', title: 'Error al eliminar', message: error.message || 'Error desconocido' });
-    } finally {
-      setGrupoAEliminar(null);
+  // ═══════════════════════════════════════════════════════════════════════
+  // MODALES
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  const abrirModal = (mode, grupo = null) => {
+    setModalConfig({ isOpen: true, mode, grupo });
+  };
+
+  const cerrarModal = () => {
+    setModalConfig({ isOpen: false, mode: null, grupo: null });
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ACCIONES CRUD
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  const handleVer = (grupo) => {
+    abrirModal('ver', grupo);
+  };
+
+  const handleEditar = (grupo) => {
+    if (!permisos.editar) {
+      alert('No tienes permisos para editar grupos');
+      return;
     }
+    abrirModal('editar', grupo);
   };
 
-  // ─── Submit: Crear ────────────────────────────────────────────────────────
-  const handleCrear = async (formData) => {
+  /**
+   * ✅ CORREGIDO: Ahora incluye construirHeaders()
+   */
+  const handleEliminar = async (oidGrupo) => {
+    if (!permisos.eliminar) {
+      alert('No tienes permisos para eliminar grupos');
+      return;
+    }
+
+    if (!window.confirm('¿Estás seguro de eliminar este grupo?')) {
+      return;
+    }
+
     try {
-      const response = await fetch(`${ENDPOINT_BASE}/crearGrupo`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(formData),
+      const url = typeof endpoints.ELIMINAR === 'function'
+        ? endpoints.ELIMINAR(oidGrupo)
+        : `${endpoints.ELIMINAR}/${oidGrupo}`;
+
+      console.log('🗑️ Eliminando grupo:', url);
+
+      // ✅ CAMBIO CRÍTICO: Agregar headers con JWT
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: construirHeaders()  // ← AGREGADO
       });
+
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `Error HTTP ${response.status}`);
+        throw new Error(`Error al eliminar: ${response.status}`);
       }
-      setModalCrear(false);
-      await fetchGrupos();
-      setAlert({ type: 'exito', title: 'Grupo creado', message: 'El grupo fue creado correctamente.' });
-    } catch (error) {
-      setAlert({ type: 'error', title: 'Error al crear grupo', message: error.message || 'Error desconocido' });
+
+      alert('Grupo eliminado correctamente');
+      cargarGrupos();
+    } catch (err) {
+      console.error('❌ Error al eliminar:', err);
+      alert(`Error: ${err.message}`);
     }
   };
 
-  // ─── Submit: Editar ───────────────────────────────────────────────────────
-  const handleGuardarEdicion = async (formData) => {
+  /**
+   * ✅ CORREGIDO: Ahora incluye construirHeaders()
+   */
+  const handleCrearGrupo = async (formData) => {
     try {
-      const response = await fetch(
-        `${ENDPOINT_BASE}/editarGrupo/${modalEditar.oidGrupo}`,
-        {
-          method: 'PUT',
-          headers: getAuthHeaders(),
-          body: JSON.stringify(formData),
-        }
-      );
+      console.log('➕ Creando grupo:', formData);
+
+      // ✅ CAMBIO CRÍTICO: Agregar headers con JWT
+      const response = await fetch(endpoints.CREAR, {
+        method: 'POST',
+        headers: construirHeaders(),  // ← AGREGADO
+        body: JSON.stringify(formData)
+      });
+
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || `Error HTTP ${response.status}`);
+        throw new Error(`Error ${response.status}: ${errorText}`);
       }
-      setModalEditar(null);
-      setGrupos((prev) =>
-        prev.map((g) =>
-          g.oidGrupo === modalEditar.oidGrupo ? { ...g, ...formData } : g
-        )
-      );
-      setAlert({ type: 'exito', title: 'Grupo actualizado', message: 'Los cambios fueron guardados correctamente.' });
-    } catch (error) {
-      setAlert({ type: 'error', title: 'Error al editar grupo', message: error.message || 'Error desconocido' });
+
+      alert('Grupo creado correctamente');
+      cerrarModal();
+      cargarGrupos();
+    } catch (err) {
+      console.error('❌ Error al crear:', err);
+      alert(`Error: ${err.message}`);
     }
   };
 
-  // ─── Disparar submit del form desde el botón del Modal ───────────────────
-  const dispararSubmit = (formId) => {
-    document
-      .getElementById(formId)
-      ?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  /**
+   * ✅ CORREGIDO: Ahora incluye construirHeaders()
+   */
+  const handleActualizarGrupo = async (formData) => {
+    try {
+      const url = typeof endpoints.ACTUALIZAR === 'function'
+        ? endpoints.ACTUALIZAR(modalConfig.grupo.oidGrupo)
+        : `${endpoints.ACTUALIZAR}/${modalConfig.grupo.oidGrupo}`;
+
+      console.log('✏️ Actualizando grupo:', url, formData);
+
+      // ✅ CAMBIO CRÍTICO: Agregar headers con JWT
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: construirHeaders(),  // ← AGREGADO
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error ${response.status}: ${errorText}`);
+      }
+
+      alert('Grupo actualizado correctamente');
+      cerrarModal();
+      cargarGrupos();
+    } catch (err) {
+      console.error('❌ Error al actualizar:', err);
+      alert(`Error: ${err.message}`);
+    }
   };
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  const handleFormSubmit = (formData) => {
+    if (modalConfig.mode === 'crear') {
+      handleCrearGrupo(formData);
+    } else if (modalConfig.mode === 'editar') {
+      handleActualizarGrupo(formData);
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONFIGURACIÓN DE MODALES
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  const getModalTitle = () => {
+    switch (modalConfig.mode) {
+      case 'ver': return 'Información del Grupo';
+      case 'crear': return 'Crear Nuevo Grupo';
+      case 'editar': return 'Editar Grupo';
+      default: return '';
+    }
+  };
+
+  const getModalButtons = () => {
+    if (modalConfig.mode === 'ver') {
+      return [
+        {
+          label: 'Cerrar',
+          onClick: cerrarModal,
+          variant: 'secondary'
+        }
+      ];
+    }
+    
+    return [
+      {
+        label: 'Cancelar',
+        onClick: cerrarModal,
+        variant: 'secondary'
+      },
+      {
+        label: modalConfig.mode === 'crear' ? 'Crear' : 'Guardar',
+        type: 'submit',
+        formId: 'grupo-form-modal',
+        variant: 'primary'
+      }
+    ];
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // RENDERIZADO
+  // ═══════════════════════════════════════════════════════════════════════
+  
   if (loading) {
     return (
-      <div className="groups-page">
-        <div className="groups-loading">Cargando grupos...</div>
+      <div className="grupos-page">
+        <div className="grupos-loading">
+          <i className="fa-solid fa-spinner fa-spin" />
+          <p>Cargando grupos...</p>
+        </div>
       </div>
     );
   }
 
+  if (error) {
+    return (
+      <div className="grupos-page">
+        <div className="grupos-error">
+          <i className="fa-solid fa-circle-exclamation" />
+          <h3>Error al cargar grupos</h3>
+          <p>{error}</p>
+          <button onClick={cargarGrupos} className="btn-retry">
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Vista para usuarios NO administradores (solo ven su grupo)
+  if (!necesitaTabla(usuario.role)) {
+    return (
+      <div className="grupos-page">
+        <div className="grupos-header">
+          <h1>Mi Grupo</h1>
+        </div>
+        
+        {grupoUnico ? (
+          <div className="grupo-detalle-card">
+            <div className="grupo-detalle-header">
+              <h2>{grupoUnico.nombreGrupo}</h2>
+              <span className="grupo-sigla-badge">{grupoUnico.sigla}</span>
+            </div>
+            
+            <div className="grupo-detalle-body">
+              <div className="grupo-info-row">
+                <span className="info-label">ID:</span>
+                <span className="info-value">{grupoUnico.oidGrupo}</span>
+              </div>
+              
+              <div className="grupo-info-row">
+                <span className="info-label">Email:</span>
+                <span className="info-value">{grupoUnico.email}</span>
+              </div>
+              
+              {grupoUnico.objetivos && (
+                <div className="grupo-info-row">
+                  <span className="info-label">Objetivos:</span>
+                  <p className="info-value">{grupoUnico.objetivos}</p>
+                </div>
+              )}
+              
+              {permisos.editar && (
+                <button 
+                  className="btn-editar-grupo"
+                  onClick={() => handleEditar(grupoUnico)}
+                >
+                  <i className="fa-solid fa-pen-to-square" />
+                  Editar Grupo
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="grupo-no-asignado">
+            <i className="fa-solid fa-users-slash" />
+            <p>No tienes un grupo asignado</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Vista para ADMINISTRADORES (ven todos los grupos en tabla)
   return (
-    <div className="groups-page">
+    <div className="grupos-page">
+      <div className="grupos-header">
+        <h1>Gestión de Grupos</h1>
+        {permisos.crear && (
+          <button 
+            className="btn-crear-grupo"
+            onClick={() => abrirModal('crear')}
+          >
+            <img src={AgregarGrupo} className='btn-add-group' alt="Nuevo Grupo" />
+            
+          </button>
+        )}
+      </div>
 
-      {/* ── Header ── */}
-      <header className="groups-header">
-        <h1 className="groups-title">Grupos</h1>
-        <button
-          className="btn-add-group"
-          title="Agregar nuevo grupo"
-          onClick={() => setModalCrear(true)}
-        >
-          <img src={AgregarGrupo} alt="Agregar grupo" />
-        </button>
-      </header>
-
-      {/* ── Búsqueda ── */}
-      <GroupsSearch value={busqueda} onChange={handleBusqueda} />
-
-      {/* ── Tabla ── */}
-      <GroupsTable
-        grupos={gruposPagina}
-        onVer={handleVer}
-        onEditar={handleEditar}
-        onEliminar={handleEliminar}
-      />
-
-      {/* ── Paginación ── */}
-      <GroupsPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
-
-      {/* ══════════════════════════════════════════
-          MODALES
-      ══════════════════════════════════════════ */}
-
-      {/* Modal: Ver información */}
-      {modalVer && (
-        <Modal
-          title={`Grupo ${modalVer.oidGrupo} — ${modalVer.nombreGrupo}`}
-          onClose={() => setModalVer(null)}
-          onConfirm={() => setModalVer(null)}
-          confirmText="Cerrar"
-          showCancel={false}
-          size="medium"
-        >
-          <CuerpoModalInfo
-            type="custom"
-            content={<InfoGrupo grupo={modalVer} />}
-          />
-        </Modal>
-      )}
-
-      {/* Modal: Crear grupo */}
-      {modalCrear && (
-        <Modal
-          title="Agregar Grupo"
-          onClose={() => setModalCrear(false)}
-          onConfirm={() => dispararSubmit('form-crear-grupo')}
-          confirmText="Crear"
-          showCancel
-          cancelText="Cancelar"
-          size="large"
-        >
-          <GrupoForm
-            formId="form-crear-grupo"
-            onSubmit={handleCrear}
-          />
-        </Modal>
-      )}
-
-      {/* Modal: Editar grupo */}
-      {modalEditar && (
-        <Modal
-          title={`Editar — ${modalEditar.nombreGrupo}`}
-          onClose={() => setModalEditar(null)}
-          onConfirm={() => dispararSubmit('form-editar-grupo')}
-          confirmText="Guardar"
-          showCancel
-          cancelText="Cancelar"
-          size="large"
-        >
-          <GrupoForm
-            formId="form-editar-grupo"
-            initialData={modalEditar}
-            onSubmit={handleGuardarEdicion}
-            showComparison
-          />
-        </Modal>
-      )}
-
-      {/* ══════════════════════════════════════════
-          ALERTAS
-      ══════════════════════════════════════════ */}
-      {alert && (
-        <Alerta
-          type={alert.type}
-          title={alert.title}
-          message={alert.message}
-          onClose={() => {
-            setAlert(null);
-            setGrupoAEliminar(null);
-          }}
-          onCancel={
-            grupoAEliminar
-              ? () => { setAlert(null); setGrupoAEliminar(null); }
-              : undefined
-          }
-          onAccept={
-            grupoAEliminar
-              ? confirmarEliminar
-              : () => setAlert(null)
-          }
+      {permisos.buscar && (
+        <GruposSearch 
+          value={searchTerm}
+          onChange={handleSearchChange}
         />
       )}
 
+      <GruposTable
+        grupos={gruposPaginados}
+        onVer={handleVer}
+        onEditar={permisos.editar ? handleEditar : null}
+        onEliminar={permisos.eliminar ? handleEliminar : null}
+      />
+
+      {permisos.paginar && totalPages > 1 && (
+        <GruposPaginacion
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+
+      {/* Modal unificado */}
+      <Modal
+        isOpen={modalConfig.isOpen}
+        onClose={cerrarModal}
+        title={getModalTitle()}
+        buttons={getModalButtons()}
+        size={modalConfig.mode === 'ver' ? 'medium' : 'large'}
+      >
+        <GrupoForm
+          initialData={modalConfig.grupo || {}}
+          onSubmit={handleFormSubmit}
+          formId="grupo-form-modal"
+          disabled={modalConfig.mode === 'ver' ? {
+            nombreGrupo: true,
+            sigla: true,
+            email: true,
+            director: true,
+            viceDirector: true,
+            objetivos: true,
+            organigrama: true
+          } : {}}
+          showComparison={modalConfig.mode === 'editar'}
+        />
+      </Modal>
     </div>
   );
 };
 
-export default GroupsPage;
+export default GruposPage;

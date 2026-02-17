@@ -25,17 +25,20 @@ export default function Login({ setUsuario }) {
 
       // Parsear la respuesta como JSON
       const data = await response.json();
-      console.log("📝 Respuesta del servidor:", data);
+      console.log("📄 Respuesta del servidor:", data);
 
       // Si el servidor responde ok y trae el token
       if (response.ok && data.token) {
+        // ✅ CORRECCIÓN CRÍTICA: Usar "role" en lugar de "rol"
         const datosUsuario = { 
           email: email,
-          rol: data.role || "Sin rol",
-          grupo: "Sin grupo",
+          role: data.role || "Integrante",  // ← CAMBIO: "role" en inglés
+          grupo: data.grupo || null,         // ← MEJORA: Usar el grupo del backend si existe
           token: data.token,
           loggedIn: true
         };
+        
+        console.log("✅ Datos del usuario guardados:", datosUsuario);
         
         localStorage.setItem("usuario", JSON.stringify(datosUsuario));
         setUsuario(datosUsuario); 
@@ -45,7 +48,7 @@ export default function Login({ setUsuario }) {
         setAlert({
           type: 'error',
           title: 'Error de Inicio de Sesión',
-          message: data?.message || 'Error desconocido'
+          message: data?.message || 'Credenciales incorrectas'
         });
       }
 

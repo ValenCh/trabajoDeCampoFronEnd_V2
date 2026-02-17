@@ -1,11 +1,12 @@
 import React from 'react';
-import GrupoRow from './GruposRow';
+import DataTable from '../Common/DataTable';
+import GrupoActions from './GruposActions';
 
 /**
  * GruposTable
  *
- * Tabla con cabecera fija y filas dinámicas.
- * Recibe la página actual de grupos ya filtrada y paginada.
+ * Tabla específica para grupos usando el componente DataTable reutilizable.
+ * Define las columnas y configuración específica de grupos.
  *
  * Props:
  *  - grupos: array        → lista de grupos de la página actual
@@ -14,44 +15,48 @@ import GrupoRow from './GruposRow';
  *  - onEliminar: function
  */
 const GruposTable = ({ grupos, onVer, onEditar, onEliminar }) => {
+  // Definir las columnas específicas de grupos
+  const columns = [
+    {
+      key: 'oidGrupo',
+      label: 'Grupo',
+      width: '12%',
+      className: 'col-id',
+    },
+    {
+      key: 'nombreGrupo',
+      label: 'Nombre',
+      width: '35%',
+      className: 'col-nombre',
+    },
+    {
+      key: 'sigla',
+      label: 'Sigla Facultad',
+      width: '25%',
+      className: 'col-sigla',
+    },
+  ];
+
+  // Renderizar las acciones para cada fila
+  const renderActions = (grupo) => (
+    <GrupoActions
+      grupo={grupo}
+      onVer={onVer}
+      onEditar={onEditar}
+      onEliminar={onEliminar}
+    />
+  );
+
   return (
-    <div className="groups-table-wrapper">
-      <table className="groups-table">
-        <colgroup>
-          <col className="col-id" />
-          <col className="col-nombre" />
-          <col className="col-sigla" />
-          <col className="col-acciones" />
-        </colgroup>
-
-        <thead>
-          <tr>
-            <th>Grupo</th>
-            <th>Nombre</th>
-            <th>Sigla Facultad</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {grupos.length === 0 ? (
-            <tr className="groups-empty-row">
-              <td colSpan={4}>No se encontraron grupos</td>
-            </tr>
-          ) : (
-            grupos.map((grupo) => (
-              <GrupoRow
-                key={grupo.oidGrupo}
-                grupo={grupo}
-                onVer={onVer}
-                onEditar={onEditar}
-                onEliminar={onEliminar}
-              />
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      columns={columns}
+      data={grupos}
+      actions={renderActions}
+      keyField="oidGrupo"
+      emptyMessage="No se encontraron grupos"
+      className="groups-table-wrapper"
+      tableClassName="groups-table"
+    />
   );
 };
 
