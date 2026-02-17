@@ -41,13 +41,7 @@ export default function Log({ children, isLogin }) {
     <div 
       className={`form ${animationClass}`} 
       id={isLogin ? 'loginContainer' : 'singUpContainer'}
-    >
-      <div className='cambiarDeLog'>
-        <button onClick={handleToggle} type='button' disabled={animating}>
-          <img className="logIcon" src={logIcon} alt={isLogin ? "Ir a Registro" : "Ir a Login"} />
-        </button>
-      </div>
-      
+    > 
       <div className={`form-content ${animating ? 'content-animating' : ''}`}>
         {children}
       </div>
