@@ -1,0 +1,221 @@
+/* =============================================
+   PAGINATION - Componente reutilizable
+   Controles de paginación genéricos
+   ============================================= */
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding-bottom: 0.5rem;
+}
+
+/* ---- Botones base ---- */
+.pagination-btn {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: white;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 42px;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+  background: rgba(255, 255, 255, 0.38);
+  transform: translateY(-2px);
+}
+
+.pagination-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pagination-btn.active {
+  background: white;
+  color: #4a5568;
+  font-weight: 700;
+  border-color: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  cursor: default;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---- Botones de navegación (prev/next/first/last) ---- */
+.pagination-btn.pagination-nav {
+  padding: 0.6rem 0.8rem;
+  min-width: 38px;
+}
+
+/* ---- Puntos suspensivos ---- */
+.pagination-ellipsis {
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.6rem 0.5rem;
+  font-size: 0.95rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+/* =============================================
+   TAMAÑOS
+   ============================================= */
+
+/* Pequeño */
+.pagination-wrapper.pagination-small .pagination-btn {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  min-width: 36px;
+  border-radius: 6px;
+}
+
+.pagination-wrapper.pagination-small .pagination-btn.pagination-nav {
+  padding: 0.45rem 0.65rem;
+  min-width: 32px;
+}
+
+.pagination-wrapper.pagination-small .pagination-ellipsis {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.4rem;
+}
+
+/* Mediano (default) */
+.pagination-wrapper.pagination-medium .pagination-btn {
+  /* Estilos ya definidos arriba */
+}
+
+/* Grande */
+.pagination-wrapper.pagination-large .pagination-btn {
+  padding: 0.75rem 1.3rem;
+  font-size: 1.05rem;
+  min-width: 48px;
+  border-radius: 10px;
+}
+
+.pagination-wrapper.pagination-large .pagination-btn.pagination-nav {
+  padding: 0.75rem 1rem;
+  min-width: 44px;
+}
+
+.pagination-wrapper.pagination-large .pagination-ellipsis {
+  font-size: 1.05rem;
+  padding: 0.75rem 0.6rem;
+}
+
+/* =============================================
+   VARIANTES Y TEMAS
+   ============================================= */
+
+/* Tema claro (para páginas con fondo claro) */
+.pagination-wrapper.light-theme .pagination-btn {
+  background: rgba(240, 245, 250, 0.8);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #333;
+}
+
+.pagination-wrapper.light-theme .pagination-btn:hover:not(:disabled):not(.active) {
+  background: rgba(220, 230, 240, 0.9);
+}
+
+.pagination-wrapper.light-theme .pagination-btn.active {
+  background: #4a5568;
+  color: white;
+  border-color: #4a5568;
+}
+
+.pagination-wrapper.light-theme .pagination-ellipsis {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Tema con borde */
+.pagination-wrapper.bordered .pagination-btn {
+  border-width: 2px;
+}
+
+/* Tema redondeado */
+.pagination-wrapper.rounded .pagination-btn {
+  border-radius: 50%;
+  padding: 0.6rem;
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+}
+
+.pagination-wrapper.rounded.pagination-small .pagination-btn {
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0.45rem;
+}
+
+.pagination-wrapper.rounded.pagination-large .pagination-btn {
+  min-width: 48px;
+  width: 48px;
+  height: 48px;
+  padding: 0.75rem;
+}
+
+/* Tema compacto (sin espacios) */
+.pagination-wrapper.compact {
+  gap: 0.25rem;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+  .pagination-wrapper {
+    gap: 0.4rem;
+  }
+
+  .pagination-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.88rem;
+    min-width: 38px;
+  }
+
+  .pagination-btn.pagination-nav {
+    padding: 0.5rem 0.7rem;
+    min-width: 34px;
+  }
+
+  .pagination-ellipsis {
+    font-size: 0.88rem;
+    padding: 0.5rem 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .pagination-wrapper {
+    gap: 0.3rem;
+  }
+
+  .pagination-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.82rem;
+    min-width: 34px;
+  }
+
+  .pagination-btn.pagination-nav {
+    padding: 0.45rem 0.6rem;
+    min-width: 30px;
+  }
+
+  /* Ocultar algunos números en móvil si hay muchos */
+  .pagination-wrapper:has(.pagination-btn:nth-child(10)) .pagination-btn:not(.active):not(.pagination-nav):nth-child(n+6):nth-last-child(n+3) {
+    display: none;
+  }
+}

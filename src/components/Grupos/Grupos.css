@@ -36,7 +36,7 @@
 }
 
 .btn-add-group {
-  background: #f3f5f4;
+  background: #f3f5f400;
   border: none;
   border-radius: 50%;
   width: 70px;
@@ -120,7 +120,8 @@
   background: rgba(180, 190, 200, 0.75);
 }
 
-/* ---- Tabla ---- */
+/* ---- Estilos específicos de tabla de grupos (sobrescriben DataTable) ---- */
+/* Mantener compatibilidad con clases específicas de grupos */
 .groups-table-wrapper {
   background: rgba(160, 173, 188, 0.75);
   border-radius: 16px;
@@ -135,7 +136,6 @@
   table-layout: fixed;
 }
 
-/* Cabecera */
 .groups-table thead tr {
   background: rgba(120, 135, 150, 0.6);
 }
@@ -150,13 +150,12 @@
   user-select: none;
 }
 
-/* Ancho de columnas */
+/* Ancho de columnas específicas de grupos */
 .col-id        { width: 12%; }
 .col-nombre    { width: 35%; }
 .col-sigla     { width: 25%; }
 .col-acciones  { width: 28%; }
 
-/* Filas */
 .groups-table tbody tr {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   transition: background 0.15s;
@@ -273,6 +272,59 @@
 }
 
 /* =============================================
+   VISTA DE DETALLE (Director/Vice/Integrante)
+   ============================================= */
+
+.grupo-detalle-container {
+  background: rgba(160, 173, 188, 0.75);
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.grupo-detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.grupo-detalle-title {
+  color: #1a1a1a;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.btn-editar-detalle {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #2e7d32;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-editar-detalle:hover {
+  background: #e8f5e9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-editar-detalle i {
+  font-size: 1rem;
+}
+
+/* =============================================
    MODAL: formularios de grupos
    ============================================= */
 
@@ -385,6 +437,7 @@
    ============================================= */
 @media (max-width: 1200px) {
   .groups-page { padding: 2rem 2rem; }
+  .grupo-detalle-container { padding: 1.75rem 2rem; }
 }
 
 @media (max-width: 992px) {
@@ -392,6 +445,9 @@
   .col-id     { width: 15%; }
   .col-sigla  { width: 22%; }
   .col-acciones { width: 30%; }
+  
+  .grupo-detalle-container { padding: 1.5rem 1.75rem; }
+  .grupo-detalle-title { font-size: 1.75rem; }
 }
 
 @media (max-width: 768px) {
@@ -408,6 +464,11 @@
 
   .grupo-form-grid { grid-template-columns: 1fr; }
   .grupo-info-grid { grid-template-columns: 1fr; }
+  
+  .grupo-detalle-container { padding: 1.25rem 1.5rem; }
+  .grupo-detalle-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .grupo-detalle-title { font-size: 1.5rem; }
+  .btn-editar-detalle { align-self: flex-end; }
 }
 
 @media (max-width: 576px) {
@@ -419,4 +480,21 @@
   .col-id     { width: 18%; }
   .col-sigla  { display: none; }
   .col-acciones { width: 32%; }
+  
+  .grupo-detalle-container { 
+    padding: 1rem 1.25rem; 
+    border-radius: 12px;
+  }
+  
+  .grupo-detalle-header { 
+    padding-bottom: 1rem; 
+    margin-bottom: 1.5rem;
+  }
+  
+  .grupo-detalle-title { font-size: 1.35rem; }
+  
+  .btn-editar-detalle {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.88rem;
+  }
 }

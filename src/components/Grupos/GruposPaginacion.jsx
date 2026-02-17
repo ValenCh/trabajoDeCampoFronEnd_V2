@@ -1,10 +1,11 @@
 import React from 'react';
+import Pagination from '../Common/Pagination';
 
 /**
  * GruposPaginacion
  *
- * Botones numéricos de paginación.
- * Solo se renderiza si hay más de una página.
+ * Wrapper específico de paginación para la página de Grupos.
+ * Usa el componente Pagination genérico con configuración específica.
  *
  * Props:
  *  - currentPage: number     → página actual (base 1)
@@ -12,25 +13,12 @@ import React from 'react';
  *  - onPageChange: function  → recibe el número de página destino
  */
 const GruposPaginacion = ({ currentPage, totalPages, onPageChange }) => {
-  if (totalPages <= 1) return null;
-
   return (
-    <div className="groups-pagination">
-      {[...Array(totalPages)].map((_, index) => {
-        const pageNumber = index + 1;
-        return (
-          <button
-            key={pageNumber}
-            className={`page-btn ${currentPage === pageNumber ? 'active' : ''}`}
-            onClick={() => onPageChange(pageNumber)}
-            aria-label={`Ir a página ${pageNumber}`}
-            aria-current={currentPage === pageNumber ? 'page' : undefined}
-          >
-            {pageNumber}
-          </button>
-        );
-      })}
-    </div>
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={onPageChange}
+    />
   );
 };
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import SearchBar from '../Common/SearchBar';
 
 /**
  * GruposSearch
  *
- * Barra de búsqueda controlada.
- * El filtrado real ocurre en GroupsPage (búsqueda local).
+ * Wrapper específico de búsqueda para la página de Grupos.
+ * Usa el componente SearchBar genérico con configuración específica.
  *
  * Props:
  *  - value: string       → valor actual del input (estado controlado)
@@ -12,28 +13,12 @@ import React from 'react';
  */
 const GruposSearch = ({ value, onChange }) => {
   return (
-    <div className="groups-search-wrapper">
-      <div className="groups-search-container">
-        <input
-          type="text"
-          className="groups-search-input"
-          placeholder="Buscar Grupo"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label="Buscar grupo por número o nombre"
-        />
-      </div>
-      <button
-        className="groups-search-btn"
-        title="Buscar"
-        aria-label="Buscar"
-        // La búsqueda es reactiva (onChange), el botón es solo UX decorativo
-        // Si en el futuro se quiere búsqueda por endpoint, aquí va el onClick
-        onClick={() => {}}
-      >
-        <i className="fa-solid fa-magnifying-glass" />
-      </button>
-    </div>
+    <SearchBar
+      value={value}
+      onChange={onChange}
+      placeholder="Buscar Grupo"
+      ariaLabel="Buscar grupo por número o nombre"
+    />
   );
 };
 

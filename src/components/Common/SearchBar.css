@@ -1,0 +1,157 @@
+/* =============================================
+   SEARCH BAR - Componente reutilizable
+   Barra de búsqueda genérica
+   ============================================= */
+
+.search-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  background: rgba(180, 190, 200, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  padding: 0.55rem 1rem 0.55rem 1.25rem;
+  width: 320px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.search-bar-container:focus-within {
+  background: rgba(180, 190, 200, 0.5);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.search-bar-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.95rem;
+  flex: 1;
+  font-family: inherit;
+  width: 100%;
+}
+
+.search-bar-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-bar-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.search-bar-btn {
+  background: rgba(180, 190, 200, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.search-bar-btn:hover:not(:disabled) {
+  background: rgba(180, 190, 200, 0.75);
+  transform: scale(1.05);
+}
+
+.search-bar-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.search-bar-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* =============================================
+   VARIANTES Y TEMAS
+   ============================================= */
+
+/* Tema claro (para páginas con fondo claro) */
+.search-bar-wrapper.light-theme .search-bar-container {
+  background: rgba(240, 245, 250, 0.9);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.search-bar-wrapper.light-theme .search-bar-container:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.search-bar-wrapper.light-theme .search-bar-input {
+  color: #333;
+}
+
+.search-bar-wrapper.light-theme .search-bar-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.search-bar-wrapper.light-theme .search-bar-btn {
+  background: rgba(100, 120, 140, 0.15);
+  color: #555;
+}
+
+.search-bar-wrapper.light-theme .search-bar-btn:hover:not(:disabled) {
+  background: rgba(100, 120, 140, 0.25);
+}
+
+/* Tamaño compacto */
+.search-bar-wrapper.compact .search-bar-container {
+  padding: 0.4rem 0.85rem 0.4rem 1rem;
+  width: 240px;
+}
+
+.search-bar-wrapper.compact .search-bar-input {
+  font-size: 0.88rem;
+}
+
+.search-bar-wrapper.compact .search-bar-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+}
+
+/* Ancho completo */
+.search-bar-wrapper.full-width .search-bar-container {
+  width: 100%;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+  .search-bar-container {
+    width: 100%;
+  }
+
+  .search-bar-wrapper {
+    flex: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-bar-container {
+    padding: 0.5rem 0.9rem 0.5rem 1.1rem;
+  }
+
+  .search-bar-input {
+    font-size: 0.9rem;
+  }
+
+  .search-bar-btn {
+    width: 34px;
+    height: 34px;
+  }
+}
