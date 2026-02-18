@@ -29,7 +29,7 @@ const Sidebar = ({ onLogOut }) => {
             const parsedData = JSON.parse(datosUsuario);
             setUsuario({
                 rol: parsedData.role || null,
-                grupo: parsedData.grupo || null,
+                grupo: parsedData.group || null,
                 email: parsedData.email || 'Error: no email'
             });
         }
