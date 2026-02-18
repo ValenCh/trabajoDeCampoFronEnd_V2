@@ -7,6 +7,7 @@ import MainLayout from "./components/MainLayout/MainLayout.jsx";
 import GruposPage from "./pages/GruposPage.jsx";
 
 import './App.css'
+import EquiposPage from "./pages/EquiposPage.jsx";
 
 // Componente contenedor de la aplicación que maneja las rutas y el estado del usuario
 function ContenedorApp({ usuario, setUsuario }) {
@@ -57,6 +58,12 @@ function ContenedorApp({ usuario, setUsuario }) {
                 path="/grupos"
                 element={<GruposPage />}
               />
+
+              {              }
+              <Route 
+                path="/equipos" 
+                element={<EquiposPage />} 
+                />
 
               {/* Aquí irían las demás rutas protegidas */}
               {/* Ejemplo:

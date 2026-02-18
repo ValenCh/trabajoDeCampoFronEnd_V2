@@ -28,7 +28,7 @@ const Sidebar = ({ onLogOut }) => {
         if (datosUsuario) {
             const parsedData = JSON.parse(datosUsuario);
             setUsuario({
-                rol: parsedData.rol || null,
+                rol: parsedData.role || null,
                 grupo: parsedData.grupo || null,
                 email: parsedData.email || 'Error: no email'
             });

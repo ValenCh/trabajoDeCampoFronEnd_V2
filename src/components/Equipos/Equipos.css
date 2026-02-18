@@ -1,0 +1,159 @@
+/* =============================================
+   EQUIPOS — Consistente con Grupos
+   ============================================= */
+
+.equipos-page {
+  flex: 0 0 auto;
+  padding: 1.5rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* ---- Header ---- */
+.equipos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.equipos-title {
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 300;
+  font-family: Georgia, serif;
+}
+
+/* ---- Botón agregar ---- */
+.btn-add-equipo {
+  background: transparent;
+  border: 2px solid;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.btn-add-equipo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.btn-add-equipo:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+/* ---- Tabla ---- */
+.equipos-table-wrapper {
+  background: rgba(160, 173, 188, 0.75);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  max-width: 90%;
+  margin: 3.5rem auto 0;
+}
+
+.equipos-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.equipos-table thead tr {
+  background: rgba(120, 135, 150, 0.6);
+}
+
+.equipos-table thead th {
+  text-align: center;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.equipos-table tbody tr {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.15s;
+}
+
+.equipos-table tbody tr:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.equipos-table tbody td {
+  padding: 0.65rem 1rem;
+  font-size: 0.92rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+/* ---- Sin resultados ---- */
+.equipos-empty-row td {
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-style: italic;
+  padding: 2.5rem 1rem;
+}
+
+/* ---- Botones acción ---- */
+.equipo-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.equipo-action-btn {
+  background: rgba(255,255,255,0.92);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  color: #2a2a2a;
+}
+
+.equipo-action-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.equipo-action-btn.btn-ver:hover {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.equipo-action-btn.btn-editar:hover {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.equipo-action-btn.btn-eliminar {
+  background: rgba(20,20,20,0.88);
+  color: white;
+}
+
+.equipo-action-btn.btn-eliminar:hover {
+  background: #c62828;
+}
+
+.equipos-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
