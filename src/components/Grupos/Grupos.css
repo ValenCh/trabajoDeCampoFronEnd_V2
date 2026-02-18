@@ -11,12 +11,13 @@
 
 /* ---- Contenedor principal ---- */
 .groups-page {
-  min-height: 100vh;
-  padding: 2rem 3rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+    flex: 0 0 auto;      /* ← no se estira */
+    padding: 1.5rem 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
 }
 
 /* ---- Header: título + botón agregar ---- */
@@ -35,9 +36,10 @@
   line-height: 1;
 }
 
+
 .btn-add-group {
   background: #f3f5f400;
-  border: none;
+  border: 2px solid;
   border-radius: 50%;
   width: 70px;
   height: 70px;
@@ -47,13 +49,12 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s, box-shadow 0.2s;
-  padding: 0;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .btn-add-group img {
-  width: 100%;
+  width: 100%;        
   height: 100%;
   object-fit: contain;
 }
@@ -63,71 +64,17 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-/* ---- Barra de búsqueda ---- */
-.groups-search-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.groups-search-container {
-  display: flex;
-  align-items: center;
-  background: rgba(180, 190, 200, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 30px;
-  padding: 0.55rem 1rem 0.55rem 1.25rem;
-  width: 320px;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.groups-search-container:focus-within {
-  background: rgba(180, 190, 200, 0.5);
-  border-color: rgba(255, 255, 255, 0.45);
-}
-
-.groups-search-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 0.95rem;
-  flex: 1;
-  font-family: inherit;
-}
-
-.groups-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.groups-search-btn {
-  background: rgba(180, 190, 200, 0.5);
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1rem;
-  transition: background 0.2s;
-  flex-shrink: 0;
-}
-
-.groups-search-btn:hover {
-  background: rgba(180, 190, 200, 0.75);
-}
-
 /* ---- Estilos específicos de tabla de grupos (sobrescriben DataTable) ---- */
 /* Mantener compatibilidad con clases específicas de grupos */
 .groups-table-wrapper {
   background: rgba(160, 173, 188, 0.75);
   border-radius: 16px;
   overflow: hidden;
-  flex: 1;
+  flex: none;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  max-width: 90%;  /* ← límite de ancho */
+  margin: 3.5rem auto 0;
+
 }
 
 .groups-table {
@@ -141,8 +88,8 @@
 }
 
 .groups-table thead th {
+  text-align: center;
   padding: 1rem 1.25rem;
-  text-align: left;
   font-size: 1rem;
   font-weight: 500;
   color: #1a1a1a;
@@ -152,9 +99,9 @@
 
 /* Ancho de columnas específicas de grupos */
 .col-id        { width: 12%; }
-.col-nombre    { width: 35%; }
-.col-sigla     { width: 25%; }
-.col-acciones  { width: 28%; }
+.col-nombre    { width: 12%; }
+.col-sigla     { width: 12%; }
+.col-acciones  { width: 12%; }
 
 .groups-table tbody tr {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -166,10 +113,14 @@
 }
 
 .groups-table tbody td {
-  padding: 0.9rem 1.25rem;
-  font-size: 0.95rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.92rem;
   color: #1a1a1a;
   vertical-align: middle;
+  text-align: center;  /* ← agregar esto */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Sin resultados */
@@ -431,6 +382,123 @@
   font-size: 0.97rem;
   color: #111;
 }
+
+
+.grupos-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+
+
+/* =============================================
+   PÁGINA "MI GRUPO" (Integrante / Director / Vice)
+   ============================================= */
+
+
+
+.grupo-detalle-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(180deg, #5f738a, #0f1e33);
+}
+
+/* Header */
+.grupos-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: #0b1c2d;
+}
+
+/* Wrapper */
+.grupo-detalle-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/* Card */
+.grupo-detalle-container {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 36px 44px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+.grupo-detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.grupo-detalle-header h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+/* Badge */
+.grupo-sigla-badge {
+  background: #2f5fa5;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* Secciones */
+.grupo-section {
+  margin-top: 28px;
+}
+
+/* Grid datos */
+.grupo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(250px, 1fr));
+  gap: 18px 40px;
+}
+
+/* Campo */
+.grupo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.field-value {
+  font-size: 1rem;
+  color: #222;
+}
+
+/* Títulos de sección */
+.section-title {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2f5fa5;
+}
+
+/* Texto largo */
+.section-text {
+  line-height: 1.65;
+  font-size: 1rem;
+  color: #333;
+  max-width: 700px;
+}
+
+
 
 /* =============================================
    RESPONSIVE

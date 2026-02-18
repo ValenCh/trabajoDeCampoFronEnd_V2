@@ -12,6 +12,7 @@ html, body, #root {
   text-align: center;
 }
 
+
 .bg-login {
   background: #0D1B2A;
   background: -webkit-linear-gradient(24deg, rgba(13, 27, 42, 0.71) 4%, rgba(27, 38, 59, 1) 23%, rgba(70, 94, 122, 1) 64%, rgba(129, 146, 166, 0.71) 95%);

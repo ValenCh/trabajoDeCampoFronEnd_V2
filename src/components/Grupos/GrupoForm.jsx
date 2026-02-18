@@ -146,8 +146,6 @@ const GrupoForm = ({
     >
       <div className="grupo-form-grid">
 
-        {/* ── SECCIÓN: Datos generales ── */}
-        <div className="grupo-form-section-title">Datos generales</div>
 
         {/* Nombre */}
         <div className="grupo-form-field full-width">
@@ -233,99 +231,7 @@ const GrupoForm = ({
           )}
         </div>
 
-        {/* ── SECCIÓN: Autoridades ── */}
-        <div className="grupo-form-section-title">Autoridades</div>
 
-        {/* Estado de carga */}
-        {loadingPersonas && (
-          <div className="grupo-form-field full-width">
-            <p className="grupo-personas-loading">
-              <i className="fa-solid fa-spinner fa-spin" /> Cargando lista de personas...
-            </p>
-          </div>
-        )}
-
-        {errorPersonas && !loadingPersonas && (
-          <div className="grupo-form-field full-width">
-            <p className="grupo-form-error">{errorPersonas}</p>
-          </div>
-        )}
-
-        {/* Director */}
-        {!loadingPersonas && !errorPersonas && (
-          <div className="grupo-form-field">
-            <label htmlFor="gf-director" className="grupo-form-label">
-              Director
-            </label>
-            <select
-              id="gf-director"
-              name="director"
-              className={[
-                'grupo-input',
-                'grupo-select',
-                fueModificado('director') ? 'changed' : '',
-              ].join(' ')}
-              value={formData.director}
-              onChange={handleChange}
-              disabled={!!disabled.director}
-            >
-              <option value="">— Sin asignar —</option>
-              {opcionesDirector.map((persona) => (
-                <option key={persona.oidPersona} value={persona.oidPersona}>
-                  {nombreCompleto(persona)}
-                </option>
-              ))}
-            </select>
-            {fueModificado('director') && (
-              <span className="grupo-original-hint">
-                Valor modificado
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Vice-Director */}
-        {!loadingPersonas && !errorPersonas && (
-          <div className="grupo-form-field">
-            <label htmlFor="gf-viceDirector" className="grupo-form-label">
-              Vice-Director
-            </label>
-            <select
-              id="gf-viceDirector"
-              name="viceDirector"
-              className={[
-                'grupo-input',
-                'grupo-select',
-                fueModificado('viceDirector') ? 'changed' : '',
-              ].join(' ')}
-              value={formData.viceDirector}
-              onChange={handleChange}
-              disabled={!!disabled.viceDirector}
-            >
-              <option value="">— Sin asignar —</option>
-              {opcionesVice.map((persona) => (
-                <option key={persona.oidPersona} value={persona.oidPersona}>
-                  {nombreCompleto(persona)}
-                </option>
-              ))}
-            </select>
-            {fueModificado('viceDirector') && (
-              <span className="grupo-original-hint">
-                Valor modificado
-              </span>
-            )}
-            {errors.viceDirector && (
-              <span className="grupo-form-error">{errors.viceDirector}</span>
-            )}
-          </div>
-        )}
-
-        {(loadingPersonas || errorPersonas) && (
-          <div className="grupo-form-field" />
-        )}
-
-        {/* ── SECCIÓN: Descripción ── */}
-        <div className="grupo-form-section-title">Descripción</div>
 
         {/* Objetivos */}
         <div className="grupo-form-field full-width">
@@ -355,9 +261,6 @@ const GrupoForm = ({
         <div className="grupo-form-field full-width">
           <label htmlFor="gf-organigrama" className="grupo-form-label">
             Organigrama
-            <span style={{ fontSize: '0.72rem', color: '#aaa', marginLeft: '6px', fontWeight: 400 }}>
-              (URL o nombre del archivo)
-            </span>
           </label>
           <input
             id="gf-organigrama"

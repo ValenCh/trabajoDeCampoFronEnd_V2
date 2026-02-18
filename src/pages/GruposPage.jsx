@@ -336,47 +336,50 @@ const GruposPage = () => {
   }
 
   // Vista para usuarios NO administradores (solo ven su grupo)
-  if (!necesitaTabla(usuario.role)) {
-    return (
-      <div className="grupos-page">
-        <div className="grupos-header">
-          <h1>Mi Grupo</h1>
-        </div>
-        
+if (!permisos.verTodos) {
+  return (
+    <div className="grupo-detalle-page">
+      <div className="grupos-header">
+        <h1>Mi Grupo</h1>
+      </div>
+
+      <div className="grupo-detalle-wrapper">
         {grupoUnico ? (
-          <div className="grupo-detalle-card">
+          <div className="grupo-detalle-container">
             <div className="grupo-detalle-header">
               <h2>{grupoUnico.nombreGrupo}</h2>
-              <span className="grupo-sigla-badge">{grupoUnico.sigla}</span>
+              <span className="grupo-sigla-badge">
+                {grupoUnico.sigla}
+              </span>
             </div>
-            
-            <div className="grupo-detalle-body">
-              <div className="grupo-info-row">
-                <span className="info-label">ID:</span>
-                <span className="info-value">{grupoUnico.oidGrupo}</span>
+
+            <div className="grupo-section">
+              <div className='grupo-grid'>
+
+              <div className="grupo-field">
+                <span className="field-label">Email</span>
+                <span className="field-value">{grupoUnico.email}</span>
               </div>
-              
-              <div className="grupo-info-row">
-                <span className="info-label">Email:</span>
-                <span className="info-value">{grupoUnico.email}</span>
+
+              <div className="grupo-field">
+                <span className="field-label">Facultad Regional</span>
+                <span className="field-value">{grupoUnico.facultadRegional}</span>
               </div>
-              
-              {grupoUnico.objetivos && (
-                <div className="grupo-info-row">
-                  <span className="info-label">Objetivos:</span>
-                  <p className="info-value">{grupoUnico.objetivos}</p>
-                </div>
-              )}
-              
-              {permisos.editar && (
-                <button 
-                  className="btn-editar-grupo"
-                  onClick={() => handleEditar(grupoUnico)}
-                >
-                  <i className="fa-solid fa-pen-to-square" />
-                  Editar Grupo
-                </button>
-              )}
+
+              <div className="grupo-section">
+                <span className="section-title">Objetivo y Desarrollo</span>
+                <p className="section-text">
+                  {grupoUnico.objetivoYDesarollo}
+                </p>
+              </div>
+
+              <div className="grupo-section">
+                <span className="section-title">Organigrama</span>
+                <p className="section-text">
+                  {grupoUnico.organigrama}
+                </p>
+              </div>
+            </div>
             </div>
           </div>
         ) : (
@@ -386,14 +389,28 @@ const GruposPage = () => {
           </div>
         )}
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+
 
   // Vista para ADMINISTRADORES (ven todos los grupos en tabla)
   return (
     <div className="grupos-page">
       <div className="grupos-header">
         <h1>Gestión de Grupos</h1>
+
+<div className="equipos-toolbar">
+
+      {permisos.buscar && (
+        <GruposSearch 
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      )}
+
+
         {permisos.crear && (
           <button 
             className="btn-crear-grupo"
@@ -404,13 +421,9 @@ const GruposPage = () => {
           </button>
         )}
       </div>
+      
 
-      {permisos.buscar && (
-        <GruposSearch 
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      )}
+</div>
 
       <GruposTable
         grupos={gruposPaginados}

@@ -16,10 +16,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const ROLES = {
-  ADMINISTRADOR: 'Administrador',
-  DIRECTOR: 'Director',
-  VICEDIRECTOR: 'ViceDirector',
-  INTEGRANTE: 'Integrante',
+  ADMINISTRADOR: 'ADMINISTRADOR',
+  DIRECTOR: 'DIRECTOR',
+  VICEDIRECTOR: 'VICEDIRECTOR',
+  INTEGRANTE: 'INTEGRANTE',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,27 +38,61 @@ export const ENDPOINTS = {
       ACTUALIZAR: (oidGrupo) => `${BASE_URL}/administrador/grupos/actualizarGrupo/${oidGrupo}`,
       ELIMINAR: (oidGrupo) => `${BASE_URL}/administrador/grupos/eliminarGrupo/${oidGrupo}`,
     },
+    EQUIPOS:{
+      LISTAR: `${BASE_URL}/administrador/equipos/listarEquipos`,
+      OBTENER: (oidEquipo) => `${BASE_URL}/administrador/equipos/obtenerEquipo/${oidEquipo}`,
+      CREAR: `${BASE_URL}/administrador/equipos/agregarEquipo`,
+      ACTUALIZAR: (oidEquipo) => `${BASE_URL}/administrador/equipos/actualizarEquipo/${oidEquipo}`,
+      ELIMINAR : (oidEquipo) => `${BASE_URL}/administrador/equipos/eliminarEquipo/${oidEquipo}`,
+    },
+    DOCUMENTOS:{
+      LISTAR: `${BASE_URL}/administrador/documentos/listarEquipos`,
+      OBTENER: (oidEquipo) => `${BASE_URL}/administrador/documentos/obtenerEquipo/${oidEquipo}`,
+      CREAR: `${BASE_URL}/administrador/documentos/agregarEquipo`,
+      ACTUALIZAR: (oidEquipo) => `${BASE_URL}/administrador/documentos/actualizarEquipo/${oidEquipo}`,
+      ELIMINAR : (oidEquipo) => `${BASE_URL}/administrador/documentos/eliminarEquipo/${oidEquipo}`,
+    },
+
   },
 
   // ─── DIRECTOR ────────────────────────────────────────────────────────────
   [ROLES.DIRECTOR]: {
     GRUPOS: {
       VER: `${BASE_URL}/director/grupo/ver`,
-      EDITAR: `${BASE_URL}/director/grupo/editar`,
+      ACTUALIZAR: `${BASE_URL}/director/grupo/editar`,
+    },
+        EQUIPOS:{
+      LISTAR: `${BASE_URL}/director/equipos/listarEquipos`,
+      OBTENER: (oidEquipo) => `${BASE_URL}/director/equipos/obtenerEquipo/${oidEquipo}`,
+      CREAR: `${BASE_URL}/director/equipos/agregarEquipo`,
+      ACTUALIZAR: (oidEquipo) => `${BASE_URL}/director/equipos/actualizarEquipo/${oidEquipo}`,
+      QUITAR : (oidEquipo) => `${BASE_URL}/director/equipos/quitarEquipo/${oidEquipo}`,
     },
   },
 
   // ─── VICEDIRECTOR ────────────────────────────────────────────────────────
   [ROLES.VICEDIRECTOR]: {
     GRUPOS: {
-      VER: `${BASE_URL}/viceDirector/grupo/ver`,
+      VER: `${BASE_URL}/vicedirector/grupo/ver`,
     },
+        EQUIPOS:{
+      LISTAR: `${BASE_URL}/vicedirector/equipos/listarEquipos`,
+      OBTENER: (oidEquipo) => `${BASE_URL}/vicedirector/equipos/obtenerEquipo/${oidEquipo}`,
+      CREAR: `${BASE_URL}/vicedirector/equipos/agregarEquipo`,
+      ACTUALIZAR: (oidEquipo) => `${BASE_URL}/vicedirector/equipos/actualizarEquipo/${oidEquipo}`,
+      QUITAR : (oidEquipo) => `${BASE_URL}/vicedirector/equipos/quitarEquipo/${oidEquipo}`,
+    },
+
   },
 
   // ─── INTEGRANTE ──────────────────────────────────────────────────────────
   [ROLES.INTEGRANTE]: {
     GRUPOS: {
       VER: `${BASE_URL}/integrante/grupo/ver`,
+    },
+    EQUIPOS: {
+      LISTAR: `${BASE_URL}/integrante/equipos/listarEquipo`,
+      OBTENER: (oidEquipo) =>`${BASE_URL}/integrante/equipos/obtenerEquipo/${oidEquipo}`,
     },
   },
 };
@@ -70,7 +104,6 @@ export const ENDPOINTS = {
 export const PERMISOS_GRUPOS = {
   [ROLES.ADMINISTRADOR]: {
     verTodos: true,        // Puede ver todos los grupos
-    verPropio: true,       // Puede ver su propio grupo
     crear: true,           // Puede crear nuevos grupos
     editar: true,          // Puede editar cualquier grupo
     eliminar: true,        // Puede eliminar cualquier grupo
@@ -106,6 +139,50 @@ export const PERMISOS_GRUPOS = {
   },
 };
 
+export const PERMISOS_EQUIPOS ={
+  [ROLES.ADMINISTRADOR]: {
+    verTodos: true,        // Puede ver todos los equipos
+    crear: true,           // Puede crear nuevos equipos
+    editar: true,          // Puede editar cualquier equipo
+    eliminar: true,        // Puede eliminar cualquier equipo
+    buscar: true,          // Puede usar la búsqueda
+    paginar: true,         // Puede usar paginación (tiene múltiples equipos)
+  },
+
+  [ROLES.DIRECTOR]: {
+  verTodos: false,
+  verPropio: true,
+  crear: true,
+  editar: true,
+  eliminar: true,
+  buscar: true,
+  paginar: true,
+},
+
+  [ROLES.VICEDIRECTOR]: {
+    verTodos: false,
+    verPropio: true,
+    crear: true,
+    editar: true,
+    eliminar: true,
+    buscar: true,
+    paginar: true,
+  },
+
+
+  [ROLES.INTEGRANTE]: {
+  verTodos: false,
+  verPropio: true,
+  crear: false,
+  editar: false,
+  eliminar: false,
+  buscar: true,
+  paginar: true,
+},
+
+};
+
+
 // ═══════════════════════════════════════════════════════════════════════════
 // FUNCIONES HELPER
 // ═══════════════════════════════════════════════════════════════════════════
@@ -119,6 +196,8 @@ export const obtenerPermisos = (rol) => {
   return PERMISOS_GRUPOS[rol] || PERMISOS_GRUPOS[ROLES.INTEGRANTE];
 };
 
+
+
 /**
  * Verifica si un rol tiene un permiso específico
  * @param {string} rol - Rol del usuario
@@ -129,6 +208,18 @@ export const tienePermiso = (rol, permiso) => {
   const permisos = obtenerPermisos(rol);
   return permisos[permiso] === true;
 };
+
+
+export const obtenerPermisosEquipos = (rol) => {
+  return PERMISOS_EQUIPOS[rol] || {};
+};
+
+export const obtenerEndpointsEquipos = (rol) => {
+  return ENDPOINTS[rol]?.EQUIPOS ||  {};
+};
+
+
+
 
 /**
  * Obtiene los endpoints de grupos según el rol
@@ -197,8 +288,9 @@ export const puedeVerMultiplesGrupos = (rol) => esAdministrador(rol);
  * @param {string} rol - Rol del usuario
  * @returns {boolean} true si necesita tabla, false si necesita vista de detalles
  */
-export const necesitaTabla = (rol) => esAdministrador(rol);
-
+export const necesitaTabla = (rol) => {
+  return rol === ROLES.ADMINISTRADOR || rol === ROLES.INTEGRANTE || rol === ROLES.DIRECTOR || rol === ROLES.VICEDIRECTOR ;
+};
 /**
  * Obtiene el usuario del localStorage
  * @returns {object} Objeto con datos del usuario (token, role, grupo?)

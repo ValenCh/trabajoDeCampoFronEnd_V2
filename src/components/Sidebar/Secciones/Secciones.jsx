@@ -37,12 +37,12 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
             <li className="nav-item">
                 <Link 
                     className="nav-link" 
-                    to={"/documentacion"}
+                    to={"/documentos"}
                     onClick={handleClick}
-                    data-tooltip="Documentación"
+                    data-tooltip="Documentos"
                 >
                     <i className="fa-solid fa-file-lines"></i>
-                    <span>Documentación</span>
+                    <span>Documentos</span>
                 </Link>
             </li> 
 
@@ -73,14 +73,29 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
             <li className="nav-item">
                 <Link 
                     className="nav-link" 
-                    to={"/equipo"}
+                    to={"/equipos"}
                     onClick={handleClick}
                     data-tooltip="Equipo"
                 >
-                    <i className="fa-solid fa-people-group"></i>
+                    <i className="fa-solid fa-toolbox"></i>
                     <span>Equipo</span>
                 </Link>
             </li>
+
+            <li className="nav-item">
+                <Link 
+                    className="nav-link" 
+                    to={"/memorias"}
+                    onClick={handleClick}
+                    data-tooltip="Memorias"
+                >
+                    <i className="fa-solid fa-file-lines"></i>
+                    <span>Memorias</span>
+                </Link>
+            </li>
+
+
+
         </ul>
     );
 };
