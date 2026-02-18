@@ -46,11 +46,12 @@ export const ENDPOINTS = {
       ELIMINAR : (oidEquipo) => `${BASE_URL}/administrador/equipos/eliminarEquipo/${oidEquipo}`,
     },
     DOCUMENTOS:{
-      LISTAR: `${BASE_URL}/administrador/documentos/listarEquipos`,
-      OBTENER: (oidEquipo) => `${BASE_URL}/administrador/documentos/obtenerEquipo/${oidEquipo}`,
-      CREAR: `${BASE_URL}/administrador/documentos/agregarEquipo`,
-      ACTUALIZAR: (oidEquipo) => `${BASE_URL}/administrador/documentos/actualizarEquipo/${oidEquipo}`,
-      ELIMINAR : (oidEquipo) => `${BASE_URL}/administrador/documentos/eliminarEquipo/${oidEquipo}`,
+      LISTAR: `${BASE_URL}/administrador/documentos/listarDocumentos`,
+      OBTENER: (oidDocumento) => `${BASE_URL}/administrador/documentos/obtenerDocumento/${oidDocumento}`,
+      CREAR: `${BASE_URL}/administrador/documentos/agregarDocumento`,
+      ACTUALIZAR: (oidDocumento) => `${BASE_URL}/administrador/documentos/actualizarDocumento/${oidDocumento}`,
+      DESCARGAR: (oidDocumento) => `${BASE_URL}/administrador/documentos/descargarDocumento/${oidDocumento}`,
+      ELIMINAR : (oidDocumento) => `${BASE_URL}/administrador/documentos/eliminarDocumento/${oidDocumento}`,
     },
 
   },
@@ -68,6 +69,14 @@ export const ENDPOINTS = {
       ACTUALIZAR: (oidEquipo) => `${BASE_URL}/director/equipos/actualizarEquipo/${oidEquipo}`,
       QUITAR : (oidEquipo) => `${BASE_URL}/director/equipos/quitarEquipo/${oidEquipo}`,
     },
+        DOCUMENTOS:{
+      LISTAR: `${BASE_URL}/director/documentos/listarDocumento`,
+      OBTENER: (oidDocumento) => `${BASE_URL}/director/documentos/obtenerDocumento/${oidDocumento}`,
+      CREAR: `${BASE_URL}/director/documentos/agregarDocumento`,
+      ACTUALIZAR: (oidDocumento) => `${BASE_URL}/director/documentos/actualizarDocumento/${oidDocumento}`,
+      DESCARGAR: (oidDocumento) => `${BASE_URL}/director/documentos/descargarDocumento/${oidDocumento}`,
+      QUITAR : (oidDocumento) => `${BASE_URL}/director/documentos/quitarDocumento/${oidDocumento}`,
+    },
   },
 
   // ─── VICEDIRECTOR ────────────────────────────────────────────────────────
@@ -83,6 +92,15 @@ export const ENDPOINTS = {
       QUITAR : (oidEquipo) => `${BASE_URL}/vicedirector/equipos/quitarEquipo/${oidEquipo}`,
     },
 
+        DOCUMENTOS:{
+      LISTAR: `${BASE_URL}/vicedirector/documentos/listarDocumento`,
+      OBTENER: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/obtenerDocumento/${oidDocumento}`,
+      CREAR: `${BASE_URL}/vicedirector/documentos/agregarDocumento`,
+      ACTUALIZAR: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/actualizarDocumento/${oidDocumento}`,
+      DESCARGAR: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/descargarDocumento/${oidDocumento}`,
+      QUITAR : (oidDocumento) => `${BASE_URL}/vicedirector/documentos/quitarDocumento/${oidDocumento}`,
+    },
+
   },
 
   // ─── INTEGRANTE ──────────────────────────────────────────────────────────
@@ -93,6 +111,11 @@ export const ENDPOINTS = {
     EQUIPOS: {
       LISTAR: `${BASE_URL}/integrante/equipos/listarEquipo`,
       OBTENER: (oidEquipo) =>`${BASE_URL}/integrante/equipos/obtenerEquipo/${oidEquipo}`,
+    },
+        DOCUMENTOS: {
+      LISTAR: `${BASE_URL}/integrante/documentos/listarDocumentos`,
+      OBTENER: (oidDocumento) =>`${BASE_URL}/integrante/documentos/obtenerDocumento/${oidDocumento}`,
+      DESCARGAR: (oidDocumento) => `${BASE_URL}/integrante/documentos/descargar/${oidDocumento}`,
     },
   },
 };
@@ -183,6 +206,52 @@ export const PERMISOS_EQUIPOS ={
 };
 
 
+
+export const PERMISOS_DOCUMENTOS ={
+  [ROLES.ADMINISTRADOR]: {
+    verTodos: true,        // Puede ver todos los documentos
+    crear: true,           // Puede crear nuevos documentos
+    editar: true,          // Puede editar cualquier documento
+    eliminar: true,        // Puede eliminar cualquier documento
+    buscar: true,          // Puede usar la búsqueda
+    paginar: true,         // Puede usar paginación (tiene múltiples documentos)
+  },
+
+  [ROLES.DIRECTOR]: {
+  verTodos: false,
+  verPropio: true,
+  crear: true,
+  editar: true,
+  eliminar: true,
+  buscar: true,
+  paginar: true,
+},
+
+  [ROLES.VICEDIRECTOR]: {
+    verTodos: false,
+    verPropio: true,
+    crear: true,
+    editar: true,
+    eliminar: true,
+    buscar: true,
+    paginar: true,
+  },
+
+
+  [ROLES.INTEGRANTE]: {
+  verTodos: false,
+  verPropio: true,
+  crear: false,
+  editar: false,
+  eliminar: false,
+  buscar: true,
+  paginar: true,
+},
+
+  
+};
+
+
 // ═══════════════════════════════════════════════════════════════════════════
 // FUNCIONES HELPER
 // ═══════════════════════════════════════════════════════════════════════════
@@ -218,6 +287,13 @@ export const obtenerEndpointsEquipos = (rol) => {
   return ENDPOINTS[rol]?.EQUIPOS ||  {};
 };
 
+export const obtenerPermisosDocumentos = (rol) => {
+  return PERMISOS_DOCUMENTOS[rol] || {};
+};
+
+export const obtenerEndpointsDocumentos = (rol) => {
+  return ENDPOINTS[rol]?.DOCUMENTOS || {};
+};
 
 
 

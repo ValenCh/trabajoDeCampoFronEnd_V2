@@ -5,6 +5,8 @@ import SingUp from "./components/Log/SingUp/SingUp.jsx";
 import Home from "./components/Home/Home";
 import MainLayout from "./components/MainLayout/MainLayout.jsx";
 import GruposPage from "./pages/GruposPage.jsx";
+import DocumentosPage from "./pages/DocumentosPage.jsx";
+
 
 import './App.css'
 import EquiposPage from "./pages/EquiposPage.jsx";
@@ -64,6 +66,13 @@ function ContenedorApp({ usuario, setUsuario }) {
                 path="/equipos" 
                 element={<EquiposPage />} 
                 />
+
+              <Route 
+                path="/documentos" 
+                element={<DocumentosPage />} 
+                />
+
+
 
               {/* Aquí irían las demás rutas protegidas */}
               {/* Ejemplo:
