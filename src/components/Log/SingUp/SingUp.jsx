@@ -32,7 +32,8 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("/auth/register", {
+      // Usamos la URL completa para evitar problemas con el proxy si falla
+      const response = await fetch("http://localhost:8081/auth/register", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json"
