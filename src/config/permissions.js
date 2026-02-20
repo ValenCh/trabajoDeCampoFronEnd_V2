@@ -48,11 +48,44 @@ export const ENDPOINTS = {
     DOCUMENTOS:{
       LISTAR: `${BASE_URL}/administrador/documentos/listarDocumentos`,
       OBTENER: (oidDocumento) => `${BASE_URL}/administrador/documentos/obtenerDocumento/${oidDocumento}`,
-      CREAR: `${BASE_URL}/administrador/documentos/agregarDocumento`,
+      CREAR: (oidGrupo) =>`${BASE_URL}/administrador/documentos/agregarDocumento/${oidGrupo}`,
       ACTUALIZAR: (oidDocumento) => `${BASE_URL}/administrador/documentos/actualizarDocumento/${oidDocumento}`,
       DESCARGAR: (oidDocumento) => `${BASE_URL}/administrador/documentos/descargarDocumento/${oidDocumento}`,
       ELIMINAR : (oidDocumento) => `${BASE_URL}/administrador/documentos/eliminarDocumento/${oidDocumento}`,
     },
+
+    BECARIOS:{
+      LISTAR: `${BASE_URL}/administrador/personas/becarios/listarBecarios`,
+      OBTENER: (oidBecario) => `${BASE_URL}/administrador/personas/becarios/obtenerBecario/${oidBecario}`,
+      CREAR: (oidGrupo) => `${BASE_URL}/administrador/personas/agregarPersona/${oidGrupo}`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/administrador/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/administrador/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INVESTIGADORES:{
+      LISTAR: `${BASE_URL}/administrador/personas/investigadores/listarInvestigadores`,
+      OBTENER: (oidInvestigador) => `${BASE_URL}/administrador/personas/investigadores/obtenerInvestigador/${oidInvestigador}`,
+      CREAR: (oidGrupo) => `${BASE_URL}/administrador/personas/agregarPersona/${oidGrupo}`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/administrador/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/administrador/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INTEGRANTESCE:{
+      LISTAR: `${BASE_URL}/administrador/personas/integrantesConsejoEducativo/listarIntegrantesConsejoEducativo`,
+      OBTENER: (oidIntegranteConsejoEducativo) => `${BASE_URL}/administrador/personas/integrantesConsejoEducativo/obtenerIntegranteConsejoEducativo/${oidIntegranteConsejoEducativo}`,
+      CREAR: (oidGrupo) => `${BASE_URL}/administrador/personas/agregarPersona/${oidGrupo}`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/administrador/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/administrador/personas/quitarPersona/${oidPersona}`,
+    },
+    
+    PERSONAL:{
+      LISTAR: `${BASE_URL}/administrador/personas/personal/listarPersonal`,
+      OBTENER: (oidPersonal) => `${BASE_URL}/administrador/personas/personal/obtenerPersonal/${oidPersonal}`,
+      CREAR: (oidGrupo) => `${BASE_URL}/administrador/personas/agregarPersona/${oidGrupo}`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/administrador/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/administrador/personas/quitarPersona/${oidPersona}`,
+    },
+
 
   },
 
@@ -62,29 +95,66 @@ export const ENDPOINTS = {
       VER: `${BASE_URL}/director/grupo/ver`,
       ACTUALIZAR: `${BASE_URL}/director/grupo/editar`,
     },
-        EQUIPOS:{
+    EQUIPOS:{
       LISTAR: `${BASE_URL}/director/equipos/listarEquipos`,
       OBTENER: (oidEquipo) => `${BASE_URL}/director/equipos/obtenerEquipo/${oidEquipo}`,
       CREAR: `${BASE_URL}/director/equipos/agregarEquipo`,
       ACTUALIZAR: (oidEquipo) => `${BASE_URL}/director/equipos/actualizarEquipo/${oidEquipo}`,
       QUITAR : (oidEquipo) => `${BASE_URL}/director/equipos/quitarEquipo/${oidEquipo}`,
     },
-        DOCUMENTOS:{
-      LISTAR: `${BASE_URL}/director/documentos/listarDocumento`,
+    DOCUMENTOS:{
+      LISTAR: `${BASE_URL}/director/documentos/listarDocumentos`,
       OBTENER: (oidDocumento) => `${BASE_URL}/director/documentos/obtenerDocumento/${oidDocumento}`,
       CREAR: `${BASE_URL}/director/documentos/agregarDocumento`,
       ACTUALIZAR: (oidDocumento) => `${BASE_URL}/director/documentos/actualizarDocumento/${oidDocumento}`,
       DESCARGAR: (oidDocumento) => `${BASE_URL}/director/documentos/descargarDocumento/${oidDocumento}`,
       QUITAR : (oidDocumento) => `${BASE_URL}/director/documentos/quitarDocumento/${oidDocumento}`,
     },
+
+    BECARIOS:{
+      LISTAR: `${BASE_URL}/director/personas/becarios/listarBecarios`,
+      OBTENER: (oidBecario) => `${BASE_URL}/director/becarios/obtenerBecario/${oidBecario}`,
+      CREAR:`${BASE_URL}/director/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/director/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/director/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INVESTIGADORES:{
+      LISTAR: `${BASE_URL}/director/personas/investigadores/listarInvestigadores`,
+      OBTENER: (oidInvestigador) => `${BASE_URL}/director/investigadores/obtenerInvestigador/${oidInvestigador}`,
+      CREAR:`${BASE_URL}/director/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/director/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/director/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INTEGRANTESCE:{
+      LISTAR: `${BASE_URL}/director/personas/integrantesConsejoEducativo/listarIntegrantesConsejoEducativo`,
+      OBTENER: (oidIntegranteConsejoEducativo) => `${BASE_URL}/director/personas/integrantesConsejoEducativo/obtenerIntegranteConsejoEducativo/${oidIntegranteConsejoEducativo}`,
+      CREAR:`${BASE_URL}/director/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/director/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/director/personas/quitarPersona/${oidPersona}`,
+    },
+    
+    PERSONAL:{
+      LISTAR: `${BASE_URL}/director/personas/personal/listarPersonal`,
+      OBTENER: (oidPersonal) => `${BASE_URL}/director/personas/personal/obtenerPersonal/${oidPersonal}`,
+      CREAR:`${BASE_URL}/director/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/director/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/director/personas/quitarPersona/${oidPersona}`,
+    },
+
   },
+
+
+
+
 
   // ─── VICEDIRECTOR ────────────────────────────────────────────────────────
   [ROLES.VICEDIRECTOR]: {
     GRUPOS: {
       VER: `${BASE_URL}/vicedirector/grupo/ver`,
     },
-        EQUIPOS:{
+    EQUIPOS:{
       LISTAR: `${BASE_URL}/vicedirector/equipos/listarEquipos`,
       OBTENER: (oidEquipo) => `${BASE_URL}/vicedirector/equipos/obtenerEquipo/${oidEquipo}`,
       CREAR: `${BASE_URL}/vicedirector/equipos/agregarEquipo`,
@@ -92,13 +162,46 @@ export const ENDPOINTS = {
       QUITAR : (oidEquipo) => `${BASE_URL}/vicedirector/equipos/quitarEquipo/${oidEquipo}`,
     },
 
-        DOCUMENTOS:{
-      LISTAR: `${BASE_URL}/vicedirector/documentos/listarDocumento`,
+    DOCUMENTOS:{
+      LISTAR: `${BASE_URL}/vicedirector/documentos/listarDocumentos`,
       OBTENER: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/obtenerDocumento/${oidDocumento}`,
       CREAR: `${BASE_URL}/vicedirector/documentos/agregarDocumento`,
       ACTUALIZAR: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/actualizarDocumento/${oidDocumento}`,
       DESCARGAR: (oidDocumento) => `${BASE_URL}/vicedirector/documentos/descargarDocumento/${oidDocumento}`,
       QUITAR : (oidDocumento) => `${BASE_URL}/vicedirector/documentos/quitarDocumento/${oidDocumento}`,
+    },
+
+
+    BECARIOS:{
+      LISTAR: `${BASE_URL}/vicedirector/personas/becarios/listarBecarios`,
+      OBTENER: (oidBecario) => `${BASE_URL}/vicedirector/personas/becarios/obtenerBecario/${oidBecario}`,
+      CREAR:`${BASE_URL}/vicedirector/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INVESTIGADORES:{
+      LISTAR: `${BASE_URL}/vicedirector/personas/investigadores/listarInvestigadores`,
+      OBTENER: (oidInvestigador) => `${BASE_URL}/vicedirector/personas/investigadores/obtenerInvestigador/${oidInvestigador}`,
+      CREAR:`${BASE_URL}/vicedirector/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/quitarPersona/${oidPersona}`,
+    },
+
+    INTEGRANTESCE:{
+      LISTAR: `${BASE_URL}/vicedirector/personas/integrantesConsejoEducativo/listarIntegrantesConsejoEducativo`,
+      OBTENER: (oidIntegranteConsejoEducativo) => `${BASE_URL}/vicedirector/personas/integrantesConsejoEducativo/obtenerIntegranteConsejoEducativo/${oidIntegranteConsejoEducativo}`,
+      CREAR:`${BASE_URL}/vicedirector/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/quitarPersona/${oidPersona}`,
+    },
+    
+    PERSONAL:{
+      LISTAR: `${BASE_URL}/vicedirector/personas/personal/listarPersonal`,
+      OBTENER: (oidPersonal) => `${BASE_URL}/vicedirector/personas/personal/obtenerPersonal/${oidPersonal}`,
+      CREAR:`${BASE_URL}/vicedirector/personas/agregarPersona`,
+      ACTUALIZAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/actualizarPersona/${oidPersona}`,
+      ELIMINAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/quitarPersona/${oidPersona}`,
     },
 
   },
@@ -112,11 +215,28 @@ export const ENDPOINTS = {
       LISTAR: `${BASE_URL}/integrante/equipos/listarEquipo`,
       OBTENER: (oidEquipo) =>`${BASE_URL}/integrante/equipos/obtenerEquipo/${oidEquipo}`,
     },
-        DOCUMENTOS: {
+    DOCUMENTOS: {
       LISTAR: `${BASE_URL}/integrante/documentos/listarDocumentos`,
       OBTENER: (oidDocumento) =>`${BASE_URL}/integrante/documentos/obtenerDocumento/${oidDocumento}`,
-      DESCARGAR: (oidDocumento) => `${BASE_URL}/integrante/documentos/descargar/${oidDocumento}`,
+      DESCARGAR: (oidDocumento) => `${BASE_URL}/integrante/documentos/descargarDocumento/${oidDocumento}`,
     },
+    BECARIOS:{
+      LISTAR: `${BASE_URL}/integrante/personas/becarios/listarBecarios`,
+      OBTENER: (oidBecario) => `${BASE_URL}/integrante/becarios/obtenerBecario/${oidBecario}`,
+    },
+    INVESTIGADORES:{
+      LISTAR: `${BASE_URL}/integrante/personas/investigadores/listarInvestigadores`,
+      OBTENER: (oidInvestigador) => `${BASE_URL}/integrante/personas/investigadores/obtenerInvestigador/${oidInvestigador}`,
+    },
+    INTEGRANTESCE:{
+      LISTAR: `${BASE_URL}/integrante/personas/integrantesConsejoEducativo/listarIntegrantesConsejoEducativo`,
+      OBTENER: (oidIntegranteConsejoEducativo) => `${BASE_URL}/integrante/personas/integrantesConsejoEducativo/obtenerIntegranteConsejoEducativo/${oidIntegranteConsejoEducativo}`,
+    },
+    PERSONAL:{
+      LISTAR: `${BASE_URL}/integrante/personas/personal/listarPersonal`,
+      OBTENER: (oidPersonal) => `${BASE_URL}/integrante/personas/personal/obtenerPersonal/${oidPersonal}`,
+    },
+
   },
 };
 
@@ -218,13 +338,13 @@ export const PERMISOS_DOCUMENTOS ={
   },
 
   [ROLES.DIRECTOR]: {
-  verTodos: false,
-  verPropio: true,
-  crear: true,
-  editar: true,
-  eliminar: true,
-  buscar: true,
-  paginar: true,
+    verTodos: false,
+    verPropio: true,
+    crear: true,
+    editar: true,
+    eliminar: true,
+    buscar: true,
+    paginar: true,
 },
 
   [ROLES.VICEDIRECTOR]: {
@@ -239,17 +359,227 @@ export const PERMISOS_DOCUMENTOS ={
 
 
   [ROLES.INTEGRANTE]: {
-  verTodos: false,
-  verPropio: true,
-  crear: false,
-  editar: false,
-  eliminar: false,
-  buscar: true,
-  paginar: true,
-},
+    verTodos: false,
+    verPropio: true,
+    crear: false,
+    editar: false,
+    eliminar: false,
+    buscar: true,
+    paginar: true,
+  },
 
-  
 };
+
+export const PERMISOS_PERSONAS ={
+
+  [ROLES.ADMINISTRADOR]: {
+    verTodos: true,        // Puede ver todas las personas
+    crear: true,           // Puede crear nuevas personas
+    editar: true,          // Puede editar cualquier persona
+    eliminar: true,        // Puede eliminar cualquier persona
+    buscar: true,          // Puede usar la búsqueda
+    paginar: true,         // Puede usar paginación (tiene múltiples personas)
+  },
+
+  [ROLES.DIRECTOR]: {
+    verTodos: false,
+    verPropio: true,
+    crear: true,
+    editar: true,
+    eliminar: true,
+    buscar: true,
+    paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      verPropio: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      verPropio: true,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+};
+
+export const PERMISOS_BECARIOS ={
+
+  [ROLES.ADMINISTRADOR]: {
+      verTodos: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,      // Puede usar paginación (tiene múltiples becarios)
+  },
+
+  [ROLES.DIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+};
+
+
+
+export const PERMISOS_INVESTIGADORES ={
+
+  [ROLES.ADMINISTRADOR]: {
+      verTodos: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,      
+
+  },
+
+  [ROLES.DIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+};
+
+
+export const PERMISOS_INTEGRANTESCE ={
+
+  [ROLES.ADMINISTRADOR]: {
+      verTodos: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,      
+
+  },
+
+  [ROLES.DIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+};
+
+export const PERMISOS_PERSONAL ={
+
+  [ROLES.ADMINISTRADOR]: {
+      verTodos: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,      
+
+  },
+
+  [ROLES.DIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+};
+
+
 
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -295,6 +625,38 @@ export const obtenerEndpointsDocumentos = (rol) => {
   return ENDPOINTS[rol]?.DOCUMENTOS || {};
 };
 
+export const obtenerPermisosBecarios = (rol) => {
+  return PERMISOS_BECARIOS[rol] || {};
+};
+
+export const obtenerEndpointsBecarios = (rol) => {
+  return ENDPOINTS[rol]?.BECARIOS || {};
+};
+
+
+export const obtenerPermisosInvestigadores = (rol) => {
+  return PERMISOS_INVESTIGADORES[rol] || {};
+};
+
+export const obtenerEndpointsInvestigadores = (rol) => {
+  return ENDPOINTS[rol]?.INVESTIGADORES || {};
+};
+
+export const obtenerPermisosPersonal = (rol) => {
+  return PERMISOS_PERSONAL[rol] || {};
+};
+
+export const obtenerEndpointsPersonal = (rol) => {
+  return ENDPOINTS[rol]?.PERSONAL || {};
+};
+
+export const obtenerPermisosIntegrantesCE = (rol) => {
+  return PERMISOS_INTEGRANTESCE[rol] || {};
+};
+
+export const obtenerEndpointsIntegrantesCE = (rol) => {
+  return ENDPOINTS[rol]?.INTEGRANTESCE || {};
+};
 
 
 /**

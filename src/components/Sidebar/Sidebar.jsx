@@ -84,48 +84,29 @@ const Sidebar = ({ onLogOut }) => {
     };
 
     const handleCategorySelect = (categoryId) => {
-        let path = "/personal";
+  let path = "/personas";
 
-        switch (categoryId) {
-            case "investigadores":
-                path = "/personal/investigadores";
-                break;
-            case "profesionales":
-                path = "/personal/profesionales";
-                break;
-            case "tecnico":
-                path = "/personal/tecnico-administrativo-apoyo";
-                break;
-            case "becarios":
-                path = "/personal/becarios";
-                break;
-            case "pasantes":
-                path = "/personal/becarios/pasantes";
-                break;
-            case "doctorado":
-                path = "/personal/becarios/doctorado";
-                break;
-            case "becarios-alumnos":
-                path = "/personal/becarios/alumnos";
-                break;
-            case "becario-graduado":
-                path = "/personal/becarios/graduado";
-                break;
-            case "maestria":
-                path = "/personal/becarios/maestria";
-                break;
-            case "proyectos-finales":
-                path = "/personal/becarios/proyectos-finales";
-                break;
-            default:
-                path = "/personal";
-                break;
-        }
+  switch (categoryId) {
+    case "investigadores":
+      path = "/personas/investigadores";
+      break;
+    case "personal":
+      path = "/personas/personal";
+      break;
+    case "consejo":
+      path = "/personas/integrantesConsejoEducativo";
+      break;
+    case "becarios":
+      path = "/personas/becarios";
+      break;
+    default:
+      path = "/personas";
+  }
 
-        navigate(path);
-        setShowSubNav(false);
-        setSelectedCategory(categoryId);
-    };
+  navigate(path);
+  setShowSubNav(false);
+  setSelectedCategory(categoryId);
+};
 
     return (
         <>

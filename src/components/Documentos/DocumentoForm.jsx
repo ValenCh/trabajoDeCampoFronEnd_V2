@@ -141,22 +141,31 @@ const DocumentoForm = ({
         {esAdmin && (
           <div className="documento-form-field full-width">
             <label className="documento-form-label">
-              Grupo <span className="req">*</span>
+              Grupo
             </label>
-            <select
-              name="oidGrupo"
-              className="documento-input"
-              value={formData.oidGrupo}
-              onChange={handleChange}
-              disabled={isReadOnly}
-            >
-              <option value="">-- Seleccione un grupo --</option>
-              {grupos.map(g => (
-                <option key={g.oidGrupo} value={g.oidGrupo}>
-                  {g.sigla}
-                </option>
-              ))}
-            </select>
+
+            {isReadOnly ? (
+              <input
+                className="documento-input"
+                type="text"
+                value={initialData?.nombreGrupo || ''}
+                disabled
+              />
+            ) : (
+              <select
+                name="oidGrupo"
+                className="documento-input"
+                value={formData.oidGrupo}
+                onChange={handleChange}
+              >
+                <option value="">-- Seleccione un grupo --</option>
+                {grupos.map(g => (
+                  <option key={g.oidGrupo} value={g.oidGrupo}>
+                    {g.sigla}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         )}
 

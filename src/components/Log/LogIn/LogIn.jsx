@@ -13,7 +13,8 @@ export default function Login({ setUsuario }) {
     evento.preventDefault();
 
     try {
-      const response = await fetch("/auth/login", {
+      // Usamos la URL completa para consistencia
+      const response = await fetch("http://localhost:8081/auth/login", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json"

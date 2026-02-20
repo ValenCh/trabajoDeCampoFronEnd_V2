@@ -6,10 +6,13 @@ import Home from "./components/Home/Home";
 import MainLayout from "./components/MainLayout/MainLayout.jsx";
 import GruposPage from "./pages/GruposPage.jsx";
 import DocumentosPage from "./pages/DocumentosPage.jsx";
-
+import IntegrantesCEPage from './pages/IntegrantesCEPage';
 
 import './App.css'
 import EquiposPage from "./pages/EquiposPage.jsx";
+import BecariosPage from "./pages/BecariosPage.jsx";
+import InvestigadoresPage from "./pages/InvestigadoresPage.jsx";
+import PersonalPage from "./pages/PersonalPage.jsx";
 
 // Componente contenedor de la aplicación que maneja las rutas y el estado del usuario
 function ContenedorApp({ usuario, setUsuario }) {
@@ -70,6 +73,26 @@ function ContenedorApp({ usuario, setUsuario }) {
               <Route 
                 path="/documentos" 
                 element={<DocumentosPage />} 
+                />
+
+              <Route 
+                path="/personas/becarios" 
+                element={<BecariosPage />} 
+                />
+
+              <Route 
+                path="/personas/investigadores" 
+                element={<InvestigadoresPage />} 
+                />
+              
+              <Route 
+                path="/personas/personal" 
+                element={<PersonalPage />} 
+                />
+
+              <Route 
+                path="/personas/integrantesConsejoEducativo" 
+                element={<IntegrantesCEPage />} 
                 />
 
 

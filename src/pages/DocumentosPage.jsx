@@ -135,52 +135,103 @@ const DocumentosPage = () => {
   // CREAR
   // =========================
   const handleCrearDocumento = async (formData) => {
-    try {
+  try {
 
-      const response = await fetch(endpoints.CREAR, {
-        method: 'POST',
-        headers: construirHeaders(),
-        body: JSON.stringify(formData)
-      });
+    const usuario = obtenerUsuario();
+    const esAdmin = usuario.role === 'ADMINISTRADOR';
 
-      if (!response.ok) throw new Error(await response.text());
+    let url = endpoints.CREAR;
 
-      alert("Documento creado");
-      cerrarModal();
-      cargarDocumentos();
-
-    } catch (err) {
-      alert(err.message);
+    if (esAdmin) {
+      if (!formData.oidGrupo) {
+        alert("Debe seleccionar un grupo");
+        return;
+      }
+      url = endpoints.CREAR(formData.oidGrupo);
     }
-  };
+
+    const { oidGrupo, ...documentoData } = formData;
+
+    const data = new FormData();
+
+    // DTO como JSON
+    data.append(
+      "documento",
+      new Blob([JSON.stringify(documentoData)], {
+        type: "application/json"
+      })
+    );
+
+    // Archivo
+    if (formData.archivo) {
+      data.append("archivo", formData.archivo);
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: construirHeaders().Authorization
+      },
+      body: data
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    alert("Documento creado correctamente");
+    cerrarModal();
+    cargarDocumentos();
+
+  } catch (err) {
+    alert(err.message);
+  }
+};
 
 
   // =========================
   // EDITAR
   // =========================
   const handleEditarDocumento = async (formData) => {
-    try {
+  try {
 
-      const response = await fetch(
-        endpoints.ACTUALIZAR(modalConfig.documento.oidDocumento),
-        {
-          method: 'PUT',
-          headers: construirHeaders(),
-          body: JSON.stringify(formData)
-        }
-      );
+    const data = new FormData();
 
-      if (!response.ok) throw new Error(await response.text());
+    // Enviamos el DTO como JSON
+    data.append(
+      "documento",
+      new Blob([JSON.stringify(formData)], {
+        type: "application/json"
+      })
+    );
 
-      alert("Documento actualizado");
-      cerrarModal();
-      cargarDocumentos();
-
-    } catch (err) {
-      alert(err.message);
+    // Si hay archivo nuevo lo agregamos
+    if (formData.archivo) {
+      data.append("archivo", formData.archivo);
     }
-  };
 
+    const response = await fetch(
+      endpoints.ACTUALIZAR(modalConfig.documento.oidDocumento),
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: construirHeaders().Authorization
+          // ❌ NO pongas Content-Type
+        },
+        body: data
+      }
+    );
+
+    if (!response.ok) throw new Error(await response.text());
+
+    alert("Documento actualizado");
+    cerrarModal();
+    cargarDocumentos();
+
+  } catch (err) {
+    alert(err.message);
+  }
+};
 
   // =========================
   // ELIMINAR
@@ -251,13 +302,16 @@ const DocumentosPage = () => {
         return;
       }
 
-      const disposition = response.headers.get("Content-Disposition");
+        const disposition = response.headers.get("Content-Disposition");
 
-      let fileName = `documento_${documento.oidDocumento}`;
+        let fileName = `documento_${documento.titulo}`;
 
-      if (disposition && disposition.includes("filename=")) {
-        fileName = disposition.split("filename=")[1].replace(/"/g, '');
-      }
+        if (disposition) {
+          const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+          if (match && match[1]) {
+            fileName = match[1].replace(/['"]/g, '');
+          }
+}
 
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -283,6 +337,10 @@ const DocumentosPage = () => {
 
   return (
     <div className="documentos-page">
+
+      <div className="documentos-header">
+        <h1 className="documentos-title">Gestión de Documentos</h1>
+      </div>
 
       <div className="documentos-toolbar">
 
@@ -325,27 +383,53 @@ const DocumentosPage = () => {
         />
       )}
 
-      {modalConfig.isOpen && (
-        <Modal
-          isOpen={modalConfig.isOpen}
-          onClose={cerrarModal}
-          title={
-            modalConfig.mode === 'crear'
-              ? 'Nuevo Documento'
-              : modalConfig.mode === 'editar'
-              ? 'Editar Documento'
-              : 'Detalle del Documento'
-          }
-        >
-          <DocumentoForm
-            formId="documentoForm"
-            initialData={modalConfig.documento}
-            onSubmit={handleFormSubmit}
-            grupos={grupos}
-            viewMode={modalConfig.mode === 'ver'}
-          />
-        </Modal>
-      )}
+{modalConfig.isOpen && (
+  <Modal
+    isOpen={modalConfig.isOpen}
+    onClose={cerrarModal}
+    title={
+      modalConfig.mode === 'crear'
+        ? 'Nuevo Documento'
+        : modalConfig.mode === 'editar'
+        ? 'Editar Documento'
+        : 'Detalle del Documento'
+    }
+    buttons={
+      modalConfig.mode === 'ver'
+        ? [
+            {
+              label: 'Cerrar',
+              onClick: cerrarModal,
+              variant: 'secondary'
+            }
+          ]
+        : [
+            {
+              label: 'Cancelar',
+              onClick: cerrarModal,
+              variant: 'secondary'
+            },
+            {
+              label:
+                modalConfig.mode === 'crear'
+                  ? 'Crear'
+                  : 'Guardar',
+              type: 'submit',
+              formId: 'documentoForm',
+              variant: 'primary'
+            }
+          ]
+    }
+  >
+    <DocumentoForm
+      formId="documentoForm"
+      initialData={modalConfig.documento}
+      onSubmit={handleFormSubmit}
+      grupos={grupos}
+      viewMode={modalConfig.mode === 'ver'}
+    />
+  </Modal>
+)}
 
     </div>
   );

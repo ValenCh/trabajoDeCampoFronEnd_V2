@@ -299,6 +299,7 @@ const handleFormSubmit = (formData) => {
       <div className="equipos-header">
         <h1 className="equipos-title">Gestión de Equipos</h1>
       </div>
+      
 
       <div className="equipos-toolbar">
 
@@ -318,8 +319,6 @@ const handleFormSubmit = (formData) => {
             <img src={AgregarEquipo} className='btn-add-equipo' alt="Nuevo Equipo" />
             
           </button>
-
-
 
 
   )}

@@ -34,7 +34,7 @@ const DocumentoActions = ({ documento, onVer, onEditar, onEliminar, onDescargar 
       {onDescargar && (
         <button
           className="documento-action-btn btn-descargar"
-          onClick={() => onDescargar(documento.oidDocumento)}
+          onClick={() => onDescargar(documento)}
           title="Descargar"
         >
           <i className="fa-solid fa-download" />
