@@ -20,12 +20,12 @@ import {
 import '../components/IntegrantesCE/IntegrantesCE.css';
 import AgregarIcon from '../assets/agregarEquipo.png';
 
-const usuario = obtenerUsuario();
-const permisos = obtenerPermisosIntegrantesCE(usuario.role);
-const endpoints = obtenerEndpointsIntegrantesCE(usuario.role);
-const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);
 
 const IntegrantesCEPage = () => {
+  const usuario = obtenerUsuario();                                   
+  const permisos = obtenerPermisosIntegrantesCE(usuario.role);        
+  const endpoints = obtenerEndpointsIntegrantesCE(usuario.role);       
+  const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);  
 
   // ═══════════════════════════════════════════════════════════════════════
   // CONFIG
