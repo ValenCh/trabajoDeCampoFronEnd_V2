@@ -86,6 +86,29 @@ export const ENDPOINTS = {
       ELIMINAR: (oidPersona) => `${BASE_URL}/administrador/personas/quitarPersona/${oidPersona}`,
     },
 
+    MEMORIAS:{
+      LISTAR: `${BASE_URL}/administrador/memorias/listadoMemorias`,
+      CREAR: (oidGrupo, anio) => `${BASE_URL}/administrador/memorias/crearMemoria/${oidGrupo}/${anio}`,
+      OBTENER: (oidMemoria) => `${BASE_URL}/administrador/memorias/obtenerMemoria/${oidMemoria}`,
+          // personas
+      LISTAR_PERSONAS: (oidMemoria) => `${BASE_URL}/administrador/memorias/${oidMemoria}/listadoPersonas`,
+      AGREGAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/administrador/memorias/${oidMemoria}/agregarPersona/${oidPersona}`,
+      QUITAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/administrador/memorias/${oidMemoria}/quitarPersona/${oidPersona}`,
+      // equipos
+      LISTAR_EQUIPOS: (oidMemoria) => `${BASE_URL}/administrador/memorias/${oidMemoria}/listadoEquipos`,
+      AGREGAR_EQUIPO: (oidMemoria, oidEquipo) => `${BASE_URL}/administrador/memorias/${oidMemoria}/agregarEquipo/${oidEquipo}`,
+      QUITAR_EQUIPO: (oidMemoria, oidEquipo) => `${BASE_URL}/administrador/memorias/${oidMemoria}/quitarEquipo/${oidEquipo}`,
+      // documentos
+      LISTAR_DOCUMENTOS: (oidMemoria) => `${BASE_URL}/administrador/memorias/${oidMemoria}/listadoDocumentos`,
+      AGREGAR_DOCUMENTO: (oidMemoria, oidDocumento) => `${BASE_URL}/administrador/memorias/${oidMemoria}/agregarDocumento/${oidDocumento}`,
+      QUITAR_DOCUMENTO: (oidMemoria, oidDocumento) => `${BASE_URL}/administrador/memorias/${oidMemoria}/quitarDocumento/${oidDocumento}`,
+
+      EXPORTAR: (oidMemoria) => `${BASE_URL}/administrador/memorias/${oidMemoria}/exportarExcel`,
+
+    },
+    PERSONAS: {
+        LISTAR_POR_GRUPO: (oidGrupo) => `${BASE_URL}/administrador/grupos/${oidGrupo}/personas/listarPersonas`,
+      },    
 
   },
 
@@ -143,10 +166,32 @@ export const ENDPOINTS = {
       ELIMINAR: (oidPersona) => `${BASE_URL}/director/personas/quitarPersona/${oidPersona}`,
     },
 
+    MEMORIAS:{
+      LISTAR: `${BASE_URL}/director/memorias/listarMemorias`,
+      CREAR: (anio) => `${BASE_URL}/director/memorias/agregarMemoria/${anio}`,
+      OBTENER: (oidMemoria) => `${BASE_URL}/director/memorias/obtenerMemoria/${oidMemoria}`,
+      //personas
+      LISTAR_PERSONAS: (oidMemoria) => `${BASE_URL}/director/memorias/${oidMemoria}/listadoPersonas`,
+      AGREGAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/director/memorias/${oidMemoria}/agregarPersona/${oidPersona}`,
+      QUITAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/director/memorias/${oidMemoria}/quitarPersona/${oidPersona}`,
+      //equipos
+      LISTAR_EQUIPOS: (oidMemoria) => `${BASE_URL}/director/memorias/${oidMemoria}/listadoEquipos`,
+      AGREGAR_EQUIPO: (oidMemoria, oidEquipo) => `${BASE_URL}/director/memorias/${oidMemoria}/agregarEquipo/${oidEquipo}`,
+      QUITAR_EQUIPO: (oidMemoria, oidEquipo) => `${BASE_URL}/director/memorias/${oidMemoria}/quitarEquipo/${oidEquipo}`,
+      //documentos
+      LISTAR_DOCUMENTOS: (oidMemoria) => `${BASE_URL}/director/memorias/${oidMemoria}/listadoDocumentos`,
+      AGREGAR_DOCUMENTO: (oidMemoria, oidDocumento) => `${BASE_URL}/director/memorias/${oidMemoria}/agregarDocumento/${oidDocumento}`,
+      QUITAR_DOCUMENTO: (oidMemoria, oidDocumento) => `${BASE_URL}/director/memorias/${oidMemoria}/quitarDocumento/${oidDocumento}`,
+      
+      EXPORTAR: (oidMemoria) => `${BASE_URL}/director/memorias/${oidMemoria}/exportarExcel`,
+
+    },
+    PERSONAS: {
+      LISTAR_POR_GRUPO: () => `${BASE_URL}/director/grupos/personas/listarPersonas`,
+    },
+
+
   },
-
-
-
 
 
   // ─── VICEDIRECTOR ────────────────────────────────────────────────────────
@@ -204,6 +249,12 @@ export const ENDPOINTS = {
       ELIMINAR: (oidPersona) => `${BASE_URL}/vicedirector/personas/quitarPersona/${oidPersona}`,
     },
 
+    MEMORIAS:{
+      LISTAR: `${BASE_URL}/vicedirector/memorias/listarMemorias`,
+      OBTENER: (oidMemoria) => `${BASE_URL}/vicedirector/memorias/obtenerMemoria/${oidMemoria}`,
+      EXPORTAR: (oidMemoria) => `${BASE_URL}/vicedirector/memorias/${oidMemoria}/exportarExcel`,
+    },
+
   },
 
   // ─── INTEGRANTE ──────────────────────────────────────────────────────────
@@ -235,6 +286,12 @@ export const ENDPOINTS = {
     PERSONAL:{
       LISTAR: `${BASE_URL}/integrante/personas/personal/listarPersonal`,
       OBTENER: (oidPersonal) => `${BASE_URL}/integrante/personas/personal/obtenerPersonal/${oidPersonal}`,
+    },
+    MEMORIAS:{
+      LISTAR: `${BASE_URL}/integrante/memorias/listarMemorias`,
+      OBTENER: (oidMemoria) => `${BASE_URL}/integrante/memorias/obtenerMemoria/${oidMemoria}`,
+      EXPORTAR: (oidMemoria) => `${BASE_URL}/integrante/memorias/${oidMemoria}/exportarExcel`,
+
     },
 
   },
@@ -580,6 +637,51 @@ export const PERMISOS_PERSONAL ={
 };
 
 
+export const PERMISOS_MEMORIAS ={
+
+
+ [ROLES.ADMINISTRADOR]: {
+      verTodos: true,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,      
+
+  },
+
+  [ROLES.DIRECTOR]: {
+      verTodos: false,
+      crear: true,
+      editar: true,
+      eliminar: true,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.VICEDIRECTOR]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+
+    [ROLES.INTEGRANTE]: {
+      verTodos: false,
+      crear: false,
+      editar: false,
+      eliminar: false,
+      buscar: true,
+      paginar: true,
+  },
+  
+
+};
+
+
+
 
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -657,6 +759,20 @@ export const obtenerPermisosIntegrantesCE = (rol) => {
 export const obtenerEndpointsIntegrantesCE = (rol) => {
   return ENDPOINTS[rol]?.INTEGRANTESCE || {};
 };
+
+export const obtenerPermisosMemorias = (rol) => {
+  return PERMISOS_MEMORIAS[rol] || {};
+};
+
+export const obtenerEndpointsMemorias = (rol) => {
+  return ENDPOINTS[rol]?.MEMORIAS || {};
+};
+
+export const obtenerEndpointsPersonas = (rol) => {
+  return ENDPOINTS[rol]?.PERSONAS || {};
+};
+
+
 
 
 /**

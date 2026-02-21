@@ -7,12 +7,13 @@ import MainLayout from "./components/MainLayout/MainLayout.jsx";
 import GruposPage from "./pages/GruposPage.jsx";
 import DocumentosPage from "./pages/DocumentosPage.jsx";
 import IntegrantesCEPage from './pages/IntegrantesCEPage';
-
+import MemoriaDetallePage from './pages/MemoriaDetallePage';
 import './App.css'
 import EquiposPage from "./pages/EquiposPage.jsx";
 import BecariosPage from "./pages/BecariosPage.jsx";
 import InvestigadoresPage from "./pages/InvestigadoresPage.jsx";
 import PersonalPage from "./pages/PersonalPage.jsx";
+import MemoriasPage from "./pages/MemoriasPage.jsx";
 
 // Componente contenedor de la aplicación que maneja las rutas y el estado del usuario
 function ContenedorApp({ usuario, setUsuario }) {
@@ -95,8 +96,13 @@ function ContenedorApp({ usuario, setUsuario }) {
                 element={<IntegrantesCEPage />} 
                 />
 
+              <Route 
+                path="/memorias" 
+                element={<MemoriasPage />} 
+                />
 
 
+              <Route path="/memorias/:oidMemoria" element={<MemoriaDetallePage />} />
               {/* Aquí irían las demás rutas protegidas */}
               {/* Ejemplo:
               <Route path="/documentacion" element={<Documentacion />} />

@@ -1,0 +1,60 @@
+/* ===========================
+   MemoriaForm.css
+   SOLO FORMULARIOS
+   =========================== */
+
+.memoria-form {
+  width: 100%;
+}
+
+.memoria-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.memoria-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.memoria-form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.memoria-form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.req {
+  color: red;
+  margin-left: 2px;
+}
+
+.memoria-input,
+.memoria-select {
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+.memoria-input:focus,
+.memoria-select:focus {
+  border-color: #5a7fa8;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(90, 127, 168, 0.15);
+}
+
+.memoria-input:disabled,
+.memoria-select:disabled {
+  background-color: #f5f5f5;
+  color: #888;
+  cursor: not-allowed;
+}
