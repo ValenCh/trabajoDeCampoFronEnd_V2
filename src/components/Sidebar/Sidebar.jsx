@@ -17,7 +17,7 @@ const Sidebar = ({ onLogOut }) => {
 
     // Datos del usuario
     const [usuario, setUsuario] = useState({
-        rol: 'Director',
+        role: 'Director',
         grupo: 'Grupo1',
         email: 'correo@mail.com'
     });
@@ -28,7 +28,7 @@ const Sidebar = ({ onLogOut }) => {
         if (datosUsuario) {
             const parsedData = JSON.parse(datosUsuario);
             setUsuario({
-                rol: parsedData.rol || null,
+                role: parsedData.role || null,
                 grupo: parsedData.grupo || null,
                 email: parsedData.email || 'Error: no email'
             });
@@ -145,7 +145,7 @@ const Sidebar = ({ onLogOut }) => {
                             <div className="profile-info">
                                 <span className="profile-name"><p>{usuario.email}</p></span>
                                 <span className="profile-group">{usuario.grupo || ""}</span>
-                                <span className="profile-role">{usuario.rol || 'Usuario'}</span>
+                                <span className="profile-role">{usuario.role || 'Usuario'}</span>
                             </div>
                         </div>
 
