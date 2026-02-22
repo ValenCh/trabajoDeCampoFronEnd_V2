@@ -12,8 +12,14 @@ const formatearMonto = (monto) => {
   return `$${monto.toLocaleString()}`;
 };
 
-const EquiposTable = ({ equipos, onVer, onEditar, onEliminar }) => {
+const EquiposTableAdmin = ({ equipos, onVer, onEditar, onEliminar }) => {
   const columns = [
+    {
+      key: 'oidEquipo',
+      label: 'ID',
+      width: '8%',
+      className: 'col-id',
+    },
     {
       key: 'denominacion',
       label: 'Denominación',
@@ -58,4 +64,4 @@ const EquiposTable = ({ equipos, onVer, onEditar, onEliminar }) => {
   );
 };
 
-export default EquiposTable;
+export default EquiposTableAdmin;

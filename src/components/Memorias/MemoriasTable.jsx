@@ -4,8 +4,8 @@ import MemoriasActions from './MemoriasActions';
 
 const MemoriasTable = ({ memorias, onExportar, permisos}) => {
   const columns = [
-    { key: 'oidMemoria', label: 'ID', width: '10%' },
-    { key: 'anio', label: 'Año', width: '30%' },
+    { key: 'anio', 
+      label: 'Año', width: '30%' },
     {
       key: 'nombreGrupo',
       label: 'Grupo',

@@ -2,12 +2,14 @@ import React from 'react';
 import DataTable from '../Common/DataTable';
 import IntegrantesConsejoEducativoActions from './IntegrantesCEActions';
 
-const IntegrantesCETable = ({ integrantes, onVer, onEditar, onEliminar }) => {
+const IntegrantesCETableAdmin = ({ integrantes, onVer, onEditar, onEliminar }) => {
   const columns = [
-    { key: 'nombre', label: 'Nombre', width: '25%' },
-    { key: 'apellido', label: 'Apellido', width: '25%' },
-    { key: 'horasSemanales', label: 'Horas', width: '15%' },
-    { key: 'cargo', label: 'Cargo', width: '25%', render: (i) => i.cargo ?? '-' },
+    { key: 'oidIntegranteConsejoEducativo', label: 'ID', width: '8%' },
+    { key: 'nombre', label: 'Nombre', width: '20%' },
+    { key: 'apellido', label: 'Apellido', width: '20%' },
+    { key: 'horasSemanales', label: 'Horas', width: '10%' },
+    { key: 'cargo', label: 'Cargo', width: '20%', render: (i) => i.cargo ?? '-' },
+    { key: 'nombreGrupo', label: 'Grupo', width: '14%', render: (i) => i.nombreGrupo ?? '-' },
   ];
 
   const renderActions = (integrante) => (
@@ -32,4 +34,4 @@ const IntegrantesCETable = ({ integrantes, onVer, onEditar, onEliminar }) => {
   );
 };
 
-export default IntegrantesCETable;
+export default IntegrantesCETableAdmin;

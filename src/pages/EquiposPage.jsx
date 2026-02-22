@@ -5,6 +5,7 @@ import Modal from '../components/Modal/Modal';               // ← 🔥 ESTE FA
 import EquipoForm from '../components/Equipos/EquipoForm';
 import { obtenerEndpointsGrupos,esAdministrador,esDirector,esViceDirector,esIntegrante } from '../config/permissions';
 import EquiposPaginacion from '../components/Equipos/EquiposPaginacion';
+import EquiposTableAdmin from '../components/Equipos/EquiposTableAdmin';
 
 import {
   obtenerUsuario,
@@ -325,11 +326,20 @@ const handleFormSubmit = (formData) => {
 
   </div>
 
-      <EquiposTable
-        equipos={equiposPaginados}
-        onVer={(e) => abrirModal("ver", e)}
-        onEditar={permisos.editar ? (e) => abrirModal("editar", e) : null}
-        onEliminar={permisos.eliminar ? handleEliminarEquipo : null} />
+      {esAdministrador(usuario.role)
+  ? <EquiposTableAdmin
+      equipos={equiposPaginados}
+      onVer={(e) => abrirModal('ver', e)}
+      onEditar={permisos.editar ? (e) => abrirModal('editar', e) : null}
+      onEliminar={permisos.eliminar ? handleEliminarEquipo : null}
+    />
+  : <EquiposTable
+      equipos={equiposPaginados}
+      onVer={(e) => abrirModal('ver', e)}
+      onEditar={permisos.editar ? (e) => abrirModal('editar', e) : null}
+      onEliminar={permisos.eliminar ? handleEliminarEquipo : null}
+    />
+}
 
         {totalPages > 1 && (
   <EquiposPaginacion

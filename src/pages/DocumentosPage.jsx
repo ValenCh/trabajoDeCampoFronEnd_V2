@@ -8,6 +8,9 @@ import Modal from '../components/Modal/Modal';
 import { obtenerEndpointsGrupos } from '../config/permissions';
 import AgregarDocumento from '../assets/agregarDocumento.png';
 
+import DocumentosTableAdmin from '../components/Documentos/DocumentosTableAdmin';
+
+
 import {
   obtenerUsuario,
   obtenerPermisosDocumentos,
@@ -366,15 +369,22 @@ const DocumentosPage = () => {
         )}
 
       </div>
-
-      <DocumentosTable
-        documentos={documentosPaginados}
-        onVer={(d) => abrirModal('ver', d)}
-        onEditar={permisos.editar ? (d) => abrirModal('editar', d) : null}
-        onEliminar={permisos.eliminar ? handleEliminarDocumento : null}
-        onDescargar={handleDescargarDocumento}
-      />
-
+{esAdministrador(usuario.role)
+  ? <DocumentosTableAdmin
+      documentos={documentosPaginados}
+      onVer={(d) => abrirModal('ver', d)}
+      onEditar={permisos.editar ? (d) => abrirModal('editar', d) : null}
+      onEliminar={permisos.eliminar ? handleEliminarDocumento : null}
+      onDescargar={handleDescargarDocumento}
+    />
+  : <DocumentosTable
+      documentos={documentosPaginados}
+      onVer={(d) => abrirModal('ver', d)}
+      onEditar={permisos.editar ? (d) => abrirModal('editar', d) : null}
+      onEliminar={permisos.eliminar ? handleEliminarDocumento : null}
+      onDescargar={handleDescargarDocumento}
+    />
+}
       {totalPages > 1 && (
         <DocumentosPaginacion
           currentPage={currentPage}

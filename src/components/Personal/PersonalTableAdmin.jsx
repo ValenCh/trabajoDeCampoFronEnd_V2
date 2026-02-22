@@ -7,12 +7,14 @@ const formatearTipoPersonal = (tipo) => {
   return tipos[tipo] ?? tipo ?? '-';
 };
 
-const PersonalTable = ({ personal, onVer, onEditar, onEliminar }) => {
+const PersonalTableAdmin = ({ personal, onVer, onEditar, onEliminar }) => {
   const columns = [
-    { key: 'nombre', label: 'Nombre', width: '25%' },
-    { key: 'apellido', label: 'Apellido', width: '25%' },
-    { key: 'horasSemanales', label: 'Horas', width: '15%' },
-    { key: 'tipoPersonal', label: 'Tipo', width: '25%', render: (p) => formatearTipoPersonal(p.tipoPersonal) },
+    { key: 'oidPersonal', label: 'ID', width: '8%' },
+    { key: 'nombre', label: 'Nombre', width: '18%' },
+    { key: 'apellido', label: 'Apellido', width: '18%' },
+    { key: 'horasSemanales', label: 'Horas', width: '10%' },
+    { key: 'tipoPersonal', label: 'Tipo', width: '18%', render: (p) => formatearTipoPersonal(p.tipoPersonal) },
+    { key: 'nombreGrupo', label: 'Grupo', width: '18%', render: (p) => p.nombreGrupo ?? '-' },
   ];
 
   const renderActions = (p) => (
@@ -32,4 +34,4 @@ const PersonalTable = ({ personal, onVer, onEditar, onEliminar }) => {
   );
 };
 
-export default PersonalTable;
+export default PersonalTableAdmin;

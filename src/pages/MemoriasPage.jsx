@@ -6,6 +6,7 @@ import MemoriasSearch from '../components/Memorias/MemoriasSearch';
 import MemoriasPaginacion from '../components/Memorias/MemoriasPaginacion';
 import MemoriaForm from '../components/Memorias/MemoriaForm';
 import Modal from '../components/Modal/Modal';
+import MemoriasTableAdmin from '../components/Memorias/MemoriasTableAdmin';
 
 import {
   obtenerUsuario,
@@ -229,13 +230,19 @@ const handleGestionarMemoria = (memoria) => {
         )}
 
       </div>
-        <MemoriasTable
-  memorias={memoriasPaginadas}
-  onExportar={handleExportar}
-  onVer={handleVerMemoria}
-  onGestionar={permisos.editar ? handleGestionarMemoria : null}
-  permisos={permisos}
-/>
+      
+        {esAdministrador(usuario.role)
+  ? <MemoriasTableAdmin
+      memorias={memoriasPaginadas}
+      onExportar={handleExportar}
+      permisos={permisos}
+    />
+  : <MemoriasTable
+      memorias={memoriasPaginadas}
+      onExportar={handleExportar}
+      permisos={permisos}
+    />
+}
 
       {totalPages > 1 && (
         <MemoriasPaginacion

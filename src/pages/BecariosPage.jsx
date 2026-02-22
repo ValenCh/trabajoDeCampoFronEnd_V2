@@ -4,6 +4,8 @@ import BecariosSearch from '../components/Becarios/BecariosSearch';
 import BecariosPaginacion from '../components/Becarios/BecariosPaginacion';
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
+import BecariosTableAdmin from '../components/Becarios/BecariosTableAdmin';
+
 
 import {
   obtenerUsuario,
@@ -284,12 +286,24 @@ const handleCrearBecario = async (formData) => {
 
       </div>
 
-      <BecariosTable
-        becarios={becariosPaginados}
-        onVer={(b) => abrirModal('ver', b)}
-        onEditar={permisos.editar ? (b) => abrirModal('editar', b) : null}
-        onEliminar={permisos.eliminar ? handleEliminarBecario : null}
-      />
+      
+      {esAdministrador(usuario.role)
+  ? <BecariosTableAdmin
+      becarios={becariosPaginados}
+      onVer={(b) => abrirModal('ver', b)}
+      onEditar={permisos.editar ? (b) => abrirModal('editar', b) : null}
+      onEliminar={permisos.eliminar ? handleEliminarBecario : null}
+    />
+  : <BecariosTable
+      becarios={becariosPaginados}
+      onVer={(b) => abrirModal('ver', b)}
+      onEditar={permisos.editar ? (b) => abrirModal('editar', b) : null}
+      onEliminar={permisos.eliminar ? handleEliminarBecario : null}
+    />
+}
+
+
+
 
       {totalPages > 1 && (
         <BecariosPaginacion

@@ -4,6 +4,7 @@ import IntegrantesCESearch from '../components/IntegrantesCE/IntegrantesCESearch
 import IntegrantesCEPaginacion from '../components/IntegrantesCE/IntegrantesCEPaginacion';
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
+import IntegrantesCETableAdmin from '../components/IntegrantesCE/IntegrantesCETableAdmin';
 
 import {
   obtenerUsuario,
@@ -276,12 +277,22 @@ const handleEliminarIntegrante = async (id) => {
 
       </div>
 
-      <IntegrantesCETable
-        integrantes={integrantesPaginados}
-        onVer={(i) => abrirModal('ver', i)}
-        onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
-        onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
-      />
+      
+      {esAdministrador(usuario.role)
+  ? <IntegrantesCETableAdmin
+      integrantes={integrantesPaginados}
+      onVer={(i) => abrirModal('ver', i)}
+      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+      onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
+    />
+  : <IntegrantesCETable
+      integrantes={integrantesPaginados}
+      onVer={(i) => abrirModal('ver', i)}
+      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+      onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
+    />
+}
+
 
       {totalPages > 1 && (
         <IntegrantesCEPaginacion

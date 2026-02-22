@@ -4,6 +4,7 @@ import PersonalSearch from '../components/Personal/PersonalSearch';
 import PersonalPaginacion from '../components/Personal/PersonalPaginacion';
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
+import PersonalTableAdmin from '../components/Personal/PersonalTableAdmin';
 
 import {
   obtenerUsuario,
@@ -283,12 +284,21 @@ const PersonalPage = () => {
 
       </div>
 
-      <PersonalTable
-        personal={personalPaginado}
-        onVer={(p) => abrirModal('ver', p)}
-        onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
-        onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
-      />
+
+{esAdministrador(usuario.role)
+  ? <PersonalTableAdmin
+      personal={personalPaginado}
+      onVer={(p) => abrirModal('ver', p)}
+      onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
+      onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
+    />
+  : <PersonalTable
+      personal={personalPaginado}
+      onVer={(p) => abrirModal('ver', p)}
+      onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
+      onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
+    />
+}
 
       {totalPages > 1 && (
         <PersonalPaginacion

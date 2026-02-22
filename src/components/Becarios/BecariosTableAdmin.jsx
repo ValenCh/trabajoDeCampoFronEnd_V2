@@ -14,13 +14,15 @@ const formatearTipoBecario = (tipo) => {
   return tipos[tipo] ?? tipo ?? '-';
 };
 
-const BecariosTable = ({ becarios, onVer, onEditar, onEliminar }) => {
+const BecariosTableAdmin = ({ becarios, onVer, onEditar, onEliminar }) => {
   const columns = [
-    { key: 'nombre', label: 'Nombre', width: '20%' },
-    { key: 'apellido', label: 'Apellido', width: '20%' },
-    { key: 'horasSemanales', label: 'Horas', width: '10%' },
-    { key: 'fuenteFinanciamiento', label: 'Fuente', width: '20%' },
-    { key: 'tipoBecario', label: 'Tipo', width: '22%', render: (b) => formatearTipoBecario(b.tipoBecario) },
+    { key: 'oidBecario', label: 'ID', width: '8%' },
+    { key: 'nombre', label: 'Nombre', width: '15%' },
+    { key: 'apellido', label: 'Apellido', width: '15%' },
+    { key: 'horasSemanales', label: 'Horas', width: '8%' },
+    { key: 'fuenteFinanciamiento', label: 'Fuente', width: '13%' },
+    { key: 'tipoBecario', label: 'Tipo', width: '18%', render: (b) => formatearTipoBecario(b.tipoBecario) },
+    { key: 'nombreGrupo', label: 'Grupo', width: '13%', render: (b) => b.nombreGrupo ?? '-' },
   ];
 
   const renderActions = (becario) => (
@@ -40,4 +42,4 @@ const BecariosTable = ({ becarios, onVer, onEditar, onEliminar }) => {
   );
 };
 
-export default BecariosTable;
+export default BecariosTableAdmin;

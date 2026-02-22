@@ -4,20 +4,19 @@ import DocumentosActions from './DocumentosActions';
 
 const formatearAnio = (anio) => anio ?? '-';
 
-const DocumentosTable = ({ documentos, onVer, onEditar, onDescargar, onEliminar }) => {
+const DocumentosTableAdmin = ({ documentos, onVer, onEditar, onDescargar, onEliminar }) => {
   const columns = [
-    {
-      key: 'titulo',
+    { key: 'oidDocumento',
+      label: 'ID', 
+      width: '10%' },
+    { key: 'titulo',
       label: 'Título',
-      width: '55%',
-      className: 'col-titulo',
-    },
-    {
-      key: 'anio',
+      width: '55%', 
+      className: 'col-titulo' },
+    { key: 'anio',
       label: 'Año',
-      width: '15%',
-      render: (doc) => formatearAnio(doc.anio),
-    }
+      width: '15%', 
+      render: (doc) => formatearAnio(doc.anio) }
   ];
 
   const renderActions = (documento) => (
@@ -43,4 +42,4 @@ const DocumentosTable = ({ documentos, onVer, onEditar, onDescargar, onEliminar 
   );
 };
 
-export default DocumentosTable;
+export default DocumentosTableAdmin;

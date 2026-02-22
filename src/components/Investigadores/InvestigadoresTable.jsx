@@ -9,11 +9,6 @@ const InvestigadoresTable = ({ investigadores, onVer, onEditar, onEliminar }) =>
 
   const columns = [
     {
-      key: 'oidInvestigador',
-      label: 'ID',
-      width: '8%',
-    },
-    {
       key: 'nombre',
       label: 'Nombre',
       width: '18%',

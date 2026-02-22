@@ -4,6 +4,7 @@ import InvestigadoresSearch from '../components/Investigadores/InvestigadoresSea
 import InvestigadoresPaginacion from '../components/Investigadores/InvestigadoresPaginacion';
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
+import InvestigadoresTableAdmin from '../components/Investigadores/InvestigadoresTableAdmin';
 
 import {
   obtenerUsuario,
@@ -284,12 +285,20 @@ const InvestigadoresPage = () => {
 
       </div>
 
-      <InvestigadoresTable
-        investigadores={investigadoresPaginados}
-        onVer={(i) => abrirModal('ver', i)}
-        onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
-        onEliminar={permisos.eliminar ? handleEliminarInvestigador : null}
-      />
+      {esAdministrador(usuario.role)
+  ? <InvestigadoresTableAdmin
+      investigadores={investigadoresPaginados}
+      onVer={(i) => abrirModal('ver', i)}
+      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+      onEliminar={permisos.eliminar ? handleEliminarInvestigador : null}
+    />
+  : <InvestigadoresTable
+      investigadores={investigadoresPaginados}
+      onVer={(i) => abrirModal('ver', i)}
+      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+      onEliminar={permisos.eliminar ? handleEliminarInvestigador : null}
+    />
+}
 
       {totalPages > 1 && (
         <InvestigadoresPaginacion
