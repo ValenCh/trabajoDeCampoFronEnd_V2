@@ -7,30 +7,30 @@ const MemoriasActions = ({ memoria, onExportar, permisos }) => {
   return (
     <div className="memorias-actions">
 
-      {/* Ver detalle - solo lectura */}
       <button
-        className="btn-action"
+        className="documento-action-btn btn-ver"
         title="Ver memoria"
         onClick={() => navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'ver' } })}
       >
+        <i className="fa-solid fa-eye" />
       </button>
 
-      {/* Gestionar - agregar/quitar recursos */}
       {permisos?.editar && (
         <button
-          className="btn-action"
+          className="documento-action-btn btn-editar"
           title="Gestionar memoria"
           onClick={() => navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'editar' } })}
         >
+          <i className="fa-solid fa-pen-to-square" />
         </button>
       )}
 
-      {/* Exportar Excel */}
       <button
-        className="btn-action"
+        className="documento-action-btn btn-descargar"
         title="Exportar a Excel"
         onClick={() => onExportar(memoria.oidMemoria)}
       >
+        <i className="fa-solid fa-file-excel" />
       </button>
 
     </div>
