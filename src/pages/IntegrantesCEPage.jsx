@@ -26,7 +26,7 @@ const IntegrantesCEPage = () => {
   const permisos = obtenerPermisosIntegrantesCE(usuario.role);
   const endpoints = obtenerEndpointsIntegrantesCE(usuario.role);
   const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);
-  const itemsPorPagina = 10;
+  const itemsPorPagina = 6;
 
   const [integrantes, setIntegrantes] = useState([]);
   const [grupos, setGrupos] = useState([]);

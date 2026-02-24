@@ -3,13 +3,22 @@
    Estilos base para cualquier tabla de datos
    ============================================= */
 
-/* ---- Wrapper de la tabla ---- */
+/* ---- Wrapper externo de la tabla ---- */
 .data-table-wrapper {
   background: rgba(160, 173, 188, 0.75);
   border-radius: 16px;
-  overflow: hidden;
+  overflow: hidden;           /* mantiene el border-radius recortando hijos */
   flex: 1;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Wrapper de scroll (nuevo) ----
+   Permite desplazamiento horizontal en mobile
+   sin romper el border-radius del contenedor padre */
+.data-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* scroll momentum en iOS */
 }
 
 /* ---- Tabla base ---- */
@@ -17,6 +26,8 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  /* Garantiza que la tabla no se comprima por debajo de su contenido */
+  min-width: 700px;
 }
 
 /* ---- Cabecera ---- */
@@ -32,6 +43,8 @@
   color: #1a1a1a;
   letter-spacing: 0.02em;
   user-select: none;
+  /* Evita que el texto de cabecera se parta en múltiples líneas */
+  white-space: nowrap;
 }
 
 /* ---- Filas del cuerpo ---- */

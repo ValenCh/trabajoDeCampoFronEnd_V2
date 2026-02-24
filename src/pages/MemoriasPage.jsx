@@ -37,7 +37,7 @@ const MemoriaPage = () => {
   const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPorPagina = 10;
+  const itemsPorPagina = 6;
 
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,

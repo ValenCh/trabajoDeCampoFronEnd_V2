@@ -1,34 +1,22 @@
 /* =============================================
-   GROUPS — Tabla administrativa
-   Consistente con bg-main (gradiente azul-oscuro)
+   GRUPOS — Consistente con Equipos
    ============================================= */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* ---- Contenedor principal ---- */
-.groups-page {
-    flex: 0 0 auto;      /* ← no se estira */
-    padding: 1.5rem 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-}
-
-/* ---- Header: título + botón agregar ---- */
-.groups-header {
+.grupos-page {
+  flex: 0 0 auto;
+  padding: 1rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
+  flex-direction: column;
+  width: 100%;
 }
 
-.groups-title {
+.grupos-header-gestion {
+  display: flex;
+  align-items: self-start;
+}
+
+.grupos-header h1 {
   color: white;
   font-size: 3.5rem;
   font-weight: 300;
@@ -36,10 +24,23 @@
   line-height: 1;
 }
 
+.grupos-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* ---- Botón agregar ---- */
+
+.btn-crear-grupo{
+  background: rgba(255, 255, 255, 0);
+  border:rgba(0, 0, 0, 0.15)
+}
 
 .btn-add-group {
-  background: #f3f5f400;
-  border: 2px solid;
+  background: transparent;
+  border: 2px ;
   border-radius: 50%;
   width: 70px;
   height: 70px;
@@ -54,7 +55,7 @@
 }
 
 .btn-add-group img {
-  width: 100%;        
+  width: 100%;
   height: 100%;
   object-fit: contain;
 }
@@ -64,17 +65,22 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-/* ---- Estilos específicos de tabla de grupos (sobrescriben DataTable) ---- */
-/* Mantener compatibilidad con clases específicas de grupos */
+/* ---- Toolbar ---- */
+.grupos-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* ---- Tabla ---- */
 .groups-table-wrapper {
   background: rgba(160, 173, 188, 0.75);
   border-radius: 16px;
   overflow: hidden;
-  flex: none;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-  max-width: 90%;  /* ← límite de ancho */
+  max-width: 90%;
   margin: 3.5rem auto 0;
-
 }
 
 .groups-table {
@@ -97,11 +103,11 @@
   user-select: none;
 }
 
-/* Ancho de columnas específicas de grupos */
-.col-id        { width: 12%; }
-.col-nombre    { width: 12%; }
-.col-sigla     { width: 12%; }
-.col-acciones  { width: 12%; }
+/* Ancho de columnas */
+.col-id       { width: 12%; }
+.col-nombre   { width: 12%; }
+.col-sigla    { width: 12%; }
+.col-acciones { width: 12%; }
 
 .groups-table tbody tr {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -116,14 +122,14 @@
   padding: 0.65rem 1rem;
   font-size: 0.92rem;
   color: #1a1a1a;
+  text-align: center;
   vertical-align: middle;
-  text-align: center;  /* ← agregar esto */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Sin resultados */
+/* ---- Sin resultados ---- */
 .groups-empty-row td {
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
@@ -131,7 +137,7 @@
   padding: 2.5rem 1rem;
 }
 
-/* ---- Botones de acción ---- */
+/* ---- Botones acción ---- */
 .group-actions {
   display: flex;
   align-items: center;
@@ -223,23 +229,41 @@
 }
 
 /* =============================================
-   VISTA DE DETALLE (Director/Vice/Integrante)
+   VISTA DETALLE DE GRUPO
    ============================================= */
 
+.grupo-detalle-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(180deg, #5f738a, #0f1e33);
+}
+
+.grupo-detalle-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 .grupo-detalle-container {
+  width: 100%;
+  max-width: 900px;
   background: rgba(160, 173, 188, 0.75);
-  border-radius: 16px;
-  padding: 2rem 2.5rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 24px;
+  padding: 36px 44px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .grupo-detalle-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.grupo-detalle-header h2 {
+  margin: 0;
+  font-size: 1.7rem;
 }
 
 .grupo-detalle-title {
@@ -249,6 +273,16 @@
   margin: 0;
 }
 
+/* ---- Badge sigla ---- */
+.grupo-sigla-badge {
+  background: #2f5fa5;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ---- Botón editar detalle ---- */
 .btn-editar-detalle {
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -258,11 +292,11 @@
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 600;
+  font-family: inherit;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s;
-  font-family: inherit;
 }
 
 .btn-editar-detalle:hover {
@@ -275,11 +309,54 @@
   font-size: 1rem;
 }
 
+/* ---- Secciones y grid de datos ---- */
+.grupo-section {
+  margin-top: 28px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2f5fa5;
+  margin-bottom: 8px;
+}
+
+.section-text {
+  line-height: 1.65;
+  font-size: 1rem;
+  color: #333;
+  max-width: 700px;
+}
+
+.grupo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(250px, 1fr));
+  gap: 18px 40px;
+}
+
+.grupo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.field-value {
+  font-size: 1rem;
+  color: #222;
+}
+
 /* =============================================
-   MODAL: formularios de grupos
+   MODAL: Formulario de grupos
    ============================================= */
 
-/* Campos del formulario de grupo */
+/* ---- Form grid ---- */
 .grupo-form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -298,8 +375,8 @@
 .grupo-form-label {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 5px;
   color: #333;
+  margin-bottom: 5px;
 }
 
 .grupo-form-label .required-mark {
@@ -353,7 +430,7 @@
   margin-top: 2px;
 }
 
-/* ---- Info del grupo (modal ver) ---- */
+/* ---- Info grid (modal ver) ---- */
 .grupo-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -383,186 +460,47 @@
   color: #111;
 }
 
-
-.grupos-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
-}
-
-
-
-/* =============================================
-   PÁGINA "MI GRUPO" (Integrante / Director / Vice)
-   ============================================= */
-
-
-
-.grupo-detalle-page {
-  min-height: 100vh;
-  padding: 40px 20px;
-  background: linear-gradient(180deg, #5f738a, #0f1e33);
-}
-
-/* Header */
-.grupos-header h1 {
-  font-size: 2.2rem;
-  margin-bottom: 30px;
-  color: #0b1c2d;
-}
-
-/* Wrapper */
-.grupo-detalle-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-/* Card */
-.grupo-detalle-container {
-  width: 100%;
-  max-width: 900px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 24px;
-  padding: 36px 44px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-}
-
-/* Header */
-.grupo-detalle-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.grupo-detalle-header h2 {
-  margin: 0;
-  font-size: 1.7rem;
-}
-
-/* Badge */
-.grupo-sigla-badge {
-  background: #2f5fa5;
-  color: #fff;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
-/* Secciones */
-.grupo-section {
-  margin-top: 28px;
-}
-
-/* Grid datos */
-.grupo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(250px, 1fr));
-  gap: 18px 40px;
-}
-
-/* Campo */
-.grupo-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.field-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #555;
-  text-transform: uppercase;
-}
-
-.field-value {
-  font-size: 1rem;
-  color: #222;
-}
-
-/* Títulos de sección */
-.section-title {
-  margin-bottom: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #2f5fa5;
-}
-
-/* Texto largo */
-.section-text {
-  line-height: 1.65;
-  font-size: 1rem;
-  color: #333;
-  max-width: 700px;
-}
-
-
-
 /* =============================================
    RESPONSIVE
    ============================================= */
+
 @media (max-width: 1200px) {
-  .groups-page { padding: 2rem 2rem; }
+  .groups-page            { padding: 2rem; }
   .grupo-detalle-container { padding: 1.75rem 2rem; }
 }
 
 @media (max-width: 992px) {
-  .groups-page { padding: 1.5rem 1.5rem; }
-  .col-id     { width: 15%; }
-  .col-sigla  { width: 22%; }
-  .col-acciones { width: 30%; }
-  
+  .groups-page            { padding: 1.5rem; }
+  .col-id                 { width: 15%; }
+  .col-sigla              { width: 22%; }
+  .col-acciones           { width: 30%; }
   .grupo-detalle-container { padding: 1.5rem 1.75rem; }
-  .grupo-detalle-title { font-size: 1.75rem; }
+  .grupo-detalle-title    { font-size: 1.75rem; }
 }
 
 @media (max-width: 768px) {
-  .groups-page { padding: 1.25rem 1rem; }
-
-  .groups-title { font-size: 2.5rem; }
-
-  .groups-search-container { width: 100%; }
-
+  .groups-page            { padding: 1.25rem 1rem; }
+  .grupos-header h1       { font-size: 2.5rem; }
   .groups-table thead th,
-  .groups-table tbody td { padding: 0.75rem 0.9rem; font-size: 0.88rem; }
-
-  .group-action-btn { width: 32px; height: 32px; font-size: 0.82rem; }
-
-  .grupo-form-grid { grid-template-columns: 1fr; }
-  .grupo-info-grid { grid-template-columns: 1fr; }
-  
+  .groups-table tbody td  { padding: 0.75rem 0.9rem; font-size: 0.88rem; }
+  .group-action-btn       { width: 32px; height: 32px; font-size: 0.82rem; }
+  .grupo-form-grid        { grid-template-columns: 1fr; }
+  .grupo-info-grid        { grid-template-columns: 1fr; }
   .grupo-detalle-container { padding: 1.25rem 1.5rem; }
-  .grupo-detalle-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-  .grupo-detalle-title { font-size: 1.5rem; }
-  .btn-editar-detalle { align-self: flex-end; }
+  .grupo-detalle-header   { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .grupo-detalle-title    { font-size: 1.5rem; }
+  .btn-editar-detalle     { align-self: flex-end; }
 }
 
 @media (max-width: 576px) {
-  .groups-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-  .btn-add-group { align-self: flex-end; width: 60px; height: 60px; }
-
-  .groups-table-wrapper { border-radius: 10px; }
-
-  .col-id     { width: 18%; }
-  .col-sigla  { display: none; }
-  .col-acciones { width: 32%; }
-  
-  .grupo-detalle-container { 
-    padding: 1rem 1.25rem; 
-    border-radius: 12px;
-  }
-  
-  .grupo-detalle-header { 
-    padding-bottom: 1rem; 
-    margin-bottom: 1.5rem;
-  }
-  
-  .grupo-detalle-title { font-size: 1.35rem; }
-  
-  .btn-editar-detalle {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.88rem;
-  }
+  .grupos-header          { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .btn-add-group          { align-self: flex-end; width: 60px; height: 60px; }
+  .groups-table-wrapper   { border-radius: 10px; }
+  .col-id                 { width: 18%; }
+  .col-sigla              { display: none; }
+  .col-acciones           { width: 32%; }
+  .grupo-detalle-container { padding: 1rem 1.25rem; border-radius: 12px; }
+  .grupo-detalle-header   { padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .grupo-detalle-title    { font-size: 1.35rem; }
+  .btn-editar-detalle     { padding: 0.6rem 1.2rem; font-size: 0.88rem; }
 }

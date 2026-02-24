@@ -31,7 +31,7 @@ const GruposPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPorPagina = 10;
+  const itemsPorPagina = 6;
   
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -282,8 +282,9 @@ const GruposPage = () => {
     return (
       <div className="grupo-detalle-page">
         <div className="grupos-header">
-          <h1>Mi Grupo</h1>
+          <h1 className='grupos-title'>Mi Grupo</h1>
         </div>
+
         <div className="grupo-detalle-wrapper">
           {grupoUnico ? (
             <div className="grupo-detalle-container">
@@ -326,20 +327,21 @@ const GruposPage = () => {
   // Vista administradores
   return (
     <div className="grupos-page">
-      <div className="grupos-header">
-        <h1>Gestión de Grupos</h1>
-
-        <div className="equipos-toolbar">
-          {permisos.buscar && (
-            <GruposSearch value={searchTerm} onChange={handleSearchChange} />
-          )}
-          {permisos.crear && (
-            <button className="btn-crear-grupo" onClick={() => abrirModal('crear')}>
-              <img src={AgregarGrupo} className='btn-add-group' alt="Nuevo Grupo" />
-            </button>
-          )}
-        </div>
+      <div className="grupos-header grupos-header-gestion">
+        <h1 className='grupos-title'>Gestión de Grupos</h1>
       </div>
+      
+      <div className="grupos-toolbar">
+        {permisos.buscar && (
+          <GruposSearch value={searchTerm} onChange={handleSearchChange} />
+        )}
+        {permisos.crear && (
+          <button className="btn-crear-grupo" onClick={() => abrirModal('crear')}>
+            <img src={AgregarGrupo} className='btn-add-group' alt="Nuevo Grupo" />
+          </button>
+        )}
+      </div>
+      
 
       <GruposTable
         grupos={gruposPaginados}
