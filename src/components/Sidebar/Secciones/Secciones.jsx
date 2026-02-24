@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 
 export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpanded }) => {
     
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
     const handleClick = () => {
         if (closeMenu) {
             closeMenu();
@@ -14,10 +16,6 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
         }
     };
 
-    const closeMobileSidebar = () => {
-        setIsMobileOpen(false);
-    };
-
     return (
         <ul className="navbar-nav secciones">
 
@@ -25,13 +23,12 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                 <Link
                     className='homeLink' 
                     to={"/"} 
-                    onClick={closeMobileSidebar}
+                    onClick={handleClick}
                     data-tooltip="Inicio"
                 >
-                        <i className="fa-solid fa-house"></i>
-                        <span>Inicio</span>
+                    <i className="fa-solid fa-house"></i>
+                    {isExpanded && <span>Inicio</span>}
                 </Link>
-
             </li>
 
             <li className="nav-item">
@@ -42,7 +39,7 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                     data-tooltip="Documentos"
                 >
                     <i className="fa-solid fa-file-lines"></i>
-                    <span>Documentos</span>
+                    {isExpanded && <span>Documentos</span>}
                 </Link>
             </li> 
 
@@ -54,7 +51,7 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                     data-tooltip="Personal"
                 >
                     <i className="fa-solid fa-users"></i>
-                    <span>Personal</span>
+                    {isExpanded && <span>Personal</span>}
                 </a>
             </li>
 
@@ -66,7 +63,7 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                     data-tooltip="Grupos"
                 >
                     <i className="fa-solid fa-user-group"></i>
-                    <span>Grupos</span>
+                    {isExpanded && <span>Grupos</span>}
                 </Link>
             </li>
 
@@ -78,7 +75,7 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                     data-tooltip="Equipo"
                 >
                     <i className="fa-solid fa-toolbox"></i>
-                    <span>Equipo</span>
+                    {isExpanded && <span>Equipo</span>}
                 </Link>
             </li>
 
@@ -90,11 +87,24 @@ export const Secciones = ({ closeMenu, onPersonalClick, isPersonalActive, isExpa
                     data-tooltip="Memorias"
                 >
                     <i className="fa-solid fa-file-lines"></i>
-                    <span>Memorias</span>
+                    {isExpanded && <span>Memorias</span>}
                 </Link>
             </li>
 
-
+            {/* 🔐 SOLO ADMINISTRADOR */}
+            {usuario?.role === "ADMINISTRADOR" && (
+                <li className="nav-item">
+                    <Link 
+                        className="nav-link" 
+                        to={"/usuarios"}
+                        onClick={handleClick}
+                        data-tooltip="Usuarios"
+                    >
+                        <i className="fa-solid fa-users-gear"></i>
+                        {isExpanded && <span>Usuarios</span>}
+                    </Link>
+                </li>
+            )}
 
         </ul>
     );

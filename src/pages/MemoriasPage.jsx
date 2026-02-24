@@ -7,6 +7,7 @@ import MemoriasPaginacion from '../components/Memorias/MemoriasPaginacion';
 import MemoriaForm from '../components/Memorias/MemoriaForm';
 import Modal from '../components/Modal/Modal';
 import MemoriasTableAdmin from '../components/Memorias/MemoriasTableAdmin';
+import Alertas from '../components/Alertas/Alertas';
 
 import {
   obtenerUsuario,
@@ -29,13 +30,11 @@ const MemoriaPage = () => {
   const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);
   const navigate = useNavigate();
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ESTADOS
-  // ═══════════════════════════════════════════════════════════════════════
   const [memorias, setMemorias] = useState([]);
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPorPagina = 10;
@@ -45,9 +44,9 @@ const MemoriaPage = () => {
     mode: null,
   });
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   // CARGA BACKEND
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   const cargarMemorias = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -59,7 +58,6 @@ const MemoriaPage = () => {
       const data = await response.json();
       setMemorias(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('❌ Error al cargar memorias:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -85,9 +83,9 @@ const MemoriaPage = () => {
     cargarGrupos();
   }, [cargarMemorias, cargarGrupos]);
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   // FILTRO + PAGINACIÓN
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   const memoriasFiltradas = memorias.filter(m => {
     if (!searchTerm) return true;
     const s = searchTerm.toLowerCase();
@@ -105,9 +103,9 @@ const MemoriaPage = () => {
     currentPage * itemsPorPagina
   );
 
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   // MODALES
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   const abrirModal = (mode) => {
     setModalConfig({ isOpen: true, mode });
   };
@@ -116,13 +114,13 @@ const MemoriaPage = () => {
     setModalConfig({ isOpen: false, mode: null });
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CREAR MEMORIA → redirige al detalle
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
+  // CREAR
+  // =========================
   const handleCrearMemoria = async (formData) => {
     try {
       if (esAdministrador(usuario.role) && !formData.oidGrupo) {
-        alert('Debe seleccionar un grupo');
+        setAlert({ type: 'error', title: 'Error', message: 'Debe seleccionar un grupo' });
         return;
       }
 
@@ -137,33 +135,48 @@ const MemoriaPage = () => {
 
       if (!response.ok) throw new Error(await response.text());
 
-      const memoriaCreada = await response.json();
-
       cerrarModal();
-      cargarMemorias(); 
+      cargarMemorias();
+      setAlert({ type: 'exito', title: 'Creada', message: 'Memoria creada correctamente' });
 
     } catch (err) {
-      console.error('❌ Error al crear memoria:', err);
-      alert(err.message);
+      setAlert({ type: 'error', title: 'Error', message: err.message });
     }
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // VER DETALLE → redirige
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
+  // EXPORTAR
+  // =========================
+  const handleExportar = async (oidMemoria) => {
+    try {
+      const response = await fetch(endpoints.EXPORTAR(oidMemoria), {
+        headers: { Authorization: construirHeaders().Authorization }
+      });
+      if (!response.ok) throw new Error('Error al exportar');
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `memoria_${oidMemoria}.xlsx`;
+      link.click();
+    } catch (err) {
+      setAlert({ type: 'error', title: 'Error', message: err.message });
+    }
+  };
+
+  // =========================
+  // NAVEGACIÓN
+  // =========================
   const handleVerMemoria = (memoria) => {
     navigate(`/memorias/${memoria.oidMemoria}`);
   };
 
+  const handleGestionarMemoria = (memoria) => {
+    navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'editar' } });
+  };
 
-const handleGestionarMemoria = (memoria) => {
-  navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'editar' } });
-};
-
-
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   // GUARDS
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   if (loading) return <p>Cargando memorias...</p>;
 
   if (error) return (
@@ -177,29 +190,9 @@ const handleGestionarMemoria = (memoria) => {
     return <p>No tenés permisos para ver memorias</p>;
   }
 
-
-
-  const handleExportar = async (oidMemoria) => {
-  try {
-    const response = await fetch(endpoints.EXPORTAR(oidMemoria), {
-      headers: { Authorization: construirHeaders().Authorization }
-    });
-    if (!response.ok) throw new Error('Error al exportar');
-    const blob = await response.blob();
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `memoria_${oidMemoria}.xlsx`;
-    link.click();
-  } catch (err) {
-    alert(err.message);
-  }
-};
-
-
-
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   // RENDER
-  // ═══════════════════════════════════════════════════════════════════════
+  // =========================
   return (
     <div className="memorias-page">
 
@@ -230,19 +223,19 @@ const handleGestionarMemoria = (memoria) => {
         )}
 
       </div>
-      
-        {esAdministrador(usuario.role)
-  ? <MemoriasTableAdmin
-      memorias={memoriasPaginadas}
-      onExportar={handleExportar}
-      permisos={permisos}
-    />
-  : <MemoriasTable
-      memorias={memoriasPaginadas}
-      onExportar={handleExportar}
-      permisos={permisos}
-    />
-}
+
+      {esAdministrador(usuario.role)
+        ? <MemoriasTableAdmin
+            memorias={memoriasPaginadas}
+            onExportar={handleExportar}
+            permisos={permisos}
+          />
+        : <MemoriasTable
+            memorias={memoriasPaginadas}
+            onExportar={handleExportar}
+            permisos={permisos}
+          />
+      }
 
       {totalPages > 1 && (
         <MemoriasPaginacion
@@ -273,6 +266,20 @@ const handleGestionarMemoria = (memoria) => {
             grupos={grupos}
           />
         </Modal>
+      )}
+
+      {alert && (
+        <Alertas
+          type={alert.type}
+          title={alert.title}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+          onCancel={() => setAlert(null)}
+          onAccept={() => {
+            if (alert.onAccept) alert.onAccept();
+            else setAlert(null);
+          }}
+        />
       )}
 
     </div>

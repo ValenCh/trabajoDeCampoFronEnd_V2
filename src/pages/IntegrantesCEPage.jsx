@@ -5,6 +5,7 @@ import IntegrantesCEPaginacion from '../components/IntegrantesCE/IntegrantesCEPa
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
 import IntegrantesCETableAdmin from '../components/IntegrantesCE/IntegrantesCETableAdmin';
+import Alertas from '../components/Alertas/Alertas';
 
 import {
   obtenerUsuario,
@@ -14,34 +15,26 @@ import {
   obtenerPermisosIntegrantesCE,
   obtenerEndpointsGrupos,
   esAdministrador,
-  esDirector,
-  esViceDirector,
 } from '../config/permissions';
 
 import '../components/IntegrantesCE/IntegrantesCE.css';
 import AgregarIcon from '../assets/agregarEquipo.png';
 
-
 const IntegrantesCEPage = () => {
-  const usuario = obtenerUsuario();                                   
-  const permisos = obtenerPermisosIntegrantesCE(usuario.role);        
-  const endpoints = obtenerEndpointsIntegrantesCE(usuario.role);       
-  const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);  
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CONFIG
-  // ═══════════════════════════════════════════════════════════════════════
+  const usuario = obtenerUsuario();
+  const permisos = obtenerPermisosIntegrantesCE(usuario.role);
+  const endpoints = obtenerEndpointsIntegrantesCE(usuario.role);
+  const endpointsGrupos = obtenerEndpointsGrupos(usuario.role);
   const itemsPorPagina = 10;
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ESTADOS
-  // ═══════════════════════════════════════════════════════════════════════
   const [integrantes, setIntegrantes] = useState([]);
   const [grupos, setGrupos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
 
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -49,56 +42,42 @@ const IntegrantesCEPage = () => {
     persona: null
   });
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CARGA BACKEND
-  // ═══════════════════════════════════════════════════════════════════════
   const cargarIntegrantes = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
       const response = await fetch(endpoints.LISTAR, {
         method: 'GET',
         headers: construirHeaders()
       });
-
       if (!response.ok) throw new Error(`Error ${response.status}`);
-
       const data = await response.json();
       setIntegrantes(Array.isArray(data) ? data : []);
-
     } catch (err) {
-      console.error('❌ Error al cargar integrantes CE:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [endpoints]);
 
   const cargarGrupos = useCallback(async () => {
     try {
       const url = endpointsGrupos.LISTAR || endpointsGrupos.VER;
       if (!url) return;
-
       const response = await fetch(url, { headers: construirHeaders() });
       if (!response.ok) throw new Error(await response.text());
-
       const data = await response.json();
       setGrupos(Array.isArray(data) ? data : [data]);
-
     } catch (err) {
       console.error('❌ Error grupos:', err.message);
     }
-  }, []);
+  }, [endpointsGrupos]);
 
   useEffect(() => {
     cargarIntegrantes();
     cargarGrupos();
   }, [cargarIntegrantes, cargarGrupos]);
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // FILTRO + PAGINACIÓN
-  // ═══════════════════════════════════════════════════════════════════════
   const integrantesFiltrados = integrantes.filter(i => {
     if (!searchTerm) return true;
     const s = searchTerm.toLowerCase();
@@ -115,9 +94,6 @@ const IntegrantesCEPage = () => {
     currentPage * itemsPorPagina
   );
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MODALES
-  // ═══════════════════════════════════════════════════════════════════════
   const abrirModal = (mode, persona = null) => {
     setModalConfig({ isOpen: true, mode, persona });
   };
@@ -126,20 +102,11 @@ const IntegrantesCEPage = () => {
     setModalConfig({ isOpen: false, mode: null, persona: null });
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ACCIONES CRUD
-  // ═══════════════════════════════════════════════════════════════════════
   const handleCrearIntegrante = async (formData) => {
-
-  if (esAdministrador(usuario.role) && !formData.oidGrupo) {
-    alert("Debe seleccionar un grupo");
-    return;
-  }
-
-  try {
-    const url = esAdministrador(usuario.role)
-      ? endpoints.CREAR(formData.oidGrupo)
-      : endpoints.CREAR;
+    if (esAdministrador(usuario.role) && !formData.oidGrupo) {
+      setAlert({ type: 'error', title: 'Error', message: 'Debe seleccionar un grupo' });
+      return;
+    }
 
     const payload = {
       nombre: formData.nombre,
@@ -149,28 +116,29 @@ const IntegrantesCEPage = () => {
       cargo: formData.cargo,
     };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: construirHeaders(),
-      body: JSON.stringify(payload)
-    });
+    try {
+      const url = esAdministrador(usuario.role)
+        ? endpoints.CREAR(formData.oidGrupo)
+        : endpoints.CREAR;
 
-    if (!response.ok) throw new Error(await response.text());
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: construirHeaders(),
+        body: JSON.stringify(payload)
+      });
 
-    alert('Integrante CE creado correctamente');
-    cerrarModal();
-    cargarIntegrantes();
+      if (!response.ok) throw new Error(await response.text());
 
-  } catch (err) {
-    console.error('❌ Error al crear integrante CE:', err);
-    alert(err.message);
-  }
-};
+      cerrarModal();
+      cargarIntegrantes();
+      setAlert({ type: 'exito', title: 'Creado', message: 'Integrante CE creado correctamente' });
 
-const handleEditarIntegrante = async (formData) => {
-  try {
-    const url = endpoints.ACTUALIZAR(modalConfig.persona.oidPersona);
+    } catch (err) {
+      setAlert({ type: 'error', title: 'Error', message: err.message });
+    }
+  };
 
+  const handleEditarIntegrante = async (formData) => {
     const payload = {
       nombre: formData.nombre,
       apellido: formData.apellido,
@@ -179,74 +147,60 @@ const handleEditarIntegrante = async (formData) => {
       cargo: formData.cargo,
     };
 
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: construirHeaders(),
-      body: JSON.stringify(payload)
-    });
+    try {
+      const response = await fetch(
+        endpoints.ACTUALIZAR(modalConfig.persona.oidPersona),
+        {
+          method: 'PUT',
+          headers: construirHeaders(),
+          body: JSON.stringify(payload)
+        }
+      );
 
-    if (!response.ok) throw new Error(await response.text());
+      if (!response.ok) throw new Error(await response.text());
 
-    alert('Integrante CE actualizado correctamente');
-    cerrarModal();
-    cargarIntegrantes();
+      cerrarModal();
+      cargarIntegrantes();
+      setAlert({ type: 'exito', title: 'Actualizado', message: 'Integrante CE actualizado correctamente' });
 
-  } catch (err) {
-    console.error('❌ Error al editar integrante CE:', err);
-    alert(err.message);
-  }
-};
+    } catch (err) {
+      setAlert({ type: 'error', title: 'Error', message: err.message });
+    }
+  };
 
+  const handleEliminarIntegrante = (id) => {
+    setAlert({
+      type: 'advertencia',
+      title: 'Desactivar integrante CE',
+      message: '¿Seguro que querés desactivar este integrante CE?',
+      onAccept: async () => {
+        try {
+          const response = await fetch(endpoints.ELIMINAR(id), {
+            method: 'PUT',
+            headers: construirHeaders()
+          });
 
-const handleEliminarIntegrante = async (id) => {
-  if (!window.confirm('¿Seguro que querés desactivar este integrante CE?')) return;
+          if (!response.ok) throw new Error(await response.text());
 
-  try {
-    const response = await fetch(
-      endpoints.ELIMINAR(id),
-      {
-        method: 'PUT',
-        headers: construirHeaders()
+          cargarIntegrantes();
+          setAlert({ type: 'exito', title: 'Desactivado', message: 'Integrante CE quitado correctamente' });
+
+        } catch (err) {
+          setAlert({ type: 'error', title: 'Error', message: err.message });
+        }
       }
-    );
-
-    if (!response.ok) throw new Error(await response.text());
-
-    alert('Integrante CE desactivado correctamente');
-    cargarIntegrantes();
-
-  } catch (err) {
-    console.error('❌ Error al desactivar integrante CE:', err);
-    alert(err.message);
-  }
-};
-
-
+    });
+  };
 
   const handleFormSubmit = (formData) => {
     if (modalConfig.mode === 'crear') handleCrearIntegrante(formData);
     if (modalConfig.mode === 'editar') handleEditarIntegrante(formData);
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // GUARDS
-  // ═══════════════════════════════════════════════════════════════════════
   if (loading) return <p>Cargando integrantes CE...</p>;
+  if (error) return <div><p>Error: {error}</p><button onClick={cargarIntegrantes}>Reintentar</button></div>;
+  if (!necesitaTabla(usuario.role)) return <p>No tienes permisos para ver integrantes CE</p>;
 
-  if (error) return (
-    <div>
-      <p>Error: {error}</p>
-      <button onClick={cargarIntegrantes}>Reintentar</button>
-    </div>
-  );
-
-  if (!necesitaTabla(usuario.role)) {
-    return <p>No tienes permisos para ver integrantes CE</p>;
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════════════════════════════
   return (
     <div className="integrantece-page">
 
@@ -255,44 +209,33 @@ const handleEliminarIntegrante = async (id) => {
       </div>
 
       <div className="integrantece-toolbar">
-
         {permisos.buscar && (
           <IntegrantesCESearch
             value={searchTerm}
-            onChange={(v) => {
-              setSearchTerm(v);
-              setCurrentPage(1);
-            }}
+            onChange={(v) => { setSearchTerm(v); setCurrentPage(1); }}
           />
         )}
-
         {permisos.crear && (
-          <button
-            className="btn-crear-integrantece"
-            onClick={() => abrirModal('crear')}
-          >
+          <button className="btn-crear-integrantece" onClick={() => abrirModal('crear')}>
             <img src={AgregarIcon} alt="Nuevo Integrante CE" />
           </button>
         )}
-
       </div>
 
-      
       {esAdministrador(usuario.role)
-  ? <IntegrantesCETableAdmin
-      integrantes={integrantesPaginados}
-      onVer={(i) => abrirModal('ver', i)}
-      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
-      onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
-    />
-  : <IntegrantesCETable
-      integrantes={integrantesPaginados}
-      onVer={(i) => abrirModal('ver', i)}
-      onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
-      onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
-    />
-}
-
+        ? <IntegrantesCETableAdmin
+            integrantes={integrantesPaginados}
+            onVer={(i) => abrirModal('ver', i)}
+            onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+            onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
+          />
+        : <IntegrantesCETable
+            integrantes={integrantesPaginados}
+            onVer={(i) => abrirModal('ver', i)}
+            onEditar={permisos.editar ? (i) => abrirModal('editar', i) : null}
+            onEliminar={permisos.eliminar ? handleEliminarIntegrante : null}
+          />
+      }
 
       {totalPages > 1 && (
         <IntegrantesCEPaginacion
@@ -313,9 +256,7 @@ const handleEliminarIntegrante = async (id) => {
           }
           buttons={
             modalConfig.mode === 'ver'
-              ? [
-                  { label: 'Cerrar', onClick: cerrarModal, variant: 'secondary' }
-                ]
+              ? [{ label: 'Cerrar', onClick: cerrarModal, variant: 'secondary' }]
               : [
                   { label: 'Cancelar', onClick: cerrarModal, variant: 'secondary' },
                   {
@@ -336,6 +277,20 @@ const handleEliminarIntegrante = async (id) => {
             grupos={grupos}
           />
         </Modal>
+      )}
+
+      {alert && (
+        <Alertas
+          type={alert.type}
+          title={alert.title}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+          onCancel={() => setAlert(null)}
+          onAccept={() => {
+            if (alert.onAccept) alert.onAccept();
+            setAlert(null);
+          }}
+        />
       )}
 
     </div>

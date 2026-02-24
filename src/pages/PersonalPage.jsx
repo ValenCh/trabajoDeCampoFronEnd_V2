@@ -5,6 +5,7 @@ import PersonalPaginacion from '../components/Personal/PersonalPaginacion';
 import Modal from '../components/Modal/Modal';
 import PersonaForm from '../components/Personas/PersonaForm';
 import PersonalTableAdmin from '../components/Personal/PersonalTableAdmin';
+import Alertas from '../components/Alertas/Alertas';
 
 import {
   obtenerUsuario,
@@ -14,8 +15,6 @@ import {
   obtenerPermisosPersonal,
   obtenerEndpointsGrupos,
   esAdministrador,
-  esDirector,
-  esViceDirector,
 } from '../config/permissions';
 
 import '../components/Personal/Personal.css';
@@ -35,6 +34,7 @@ const PersonalPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
 
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -42,27 +42,18 @@ const PersonalPage = () => {
     persona: null
   });
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CARGA BACKEND
-  // ═══════════════════════════════════════════════════════════════════════
-
   const cargarPersonal = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
       const response = await fetch(endpoints.LISTAR, {
         method: 'GET',
         headers: construirHeaders()
       });
-
       if (!response.ok) throw new Error(`Error ${response.status}`);
-
       const data = await response.json();
       setPersonal(Array.isArray(data) ? data : []);
-
     } catch (err) {
-      console.error('❌ Error al cargar personal:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -73,13 +64,10 @@ const PersonalPage = () => {
     try {
       const url = endpointsGrupos.LISTAR || endpointsGrupos.VER;
       if (!url) return;
-
       const response = await fetch(url, { headers: construirHeaders() });
       if (!response.ok) throw new Error(await response.text());
-
       const data = await response.json();
       setGrupos(Array.isArray(data) ? data : [data]);
-
     } catch (err) {
       console.error('❌ Error grupos:', err.message);
     }
@@ -89,10 +77,6 @@ const PersonalPage = () => {
     cargarPersonal();
     cargarGrupos();
   }, [cargarPersonal, cargarGrupos]);
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // FILTRO + PAGINACIÓN
-  // ═══════════════════════════════════════════════════════════════════════
 
   const personalFiltrado = personal.filter(p => {
     if (!searchTerm) return true;
@@ -110,10 +94,6 @@ const PersonalPage = () => {
     currentPage * itemsPorPagina
   );
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // MODAL
-  // ═══════════════════════════════════════════════════════════════════════
-
   const abrirModal = (mode, persona = null) => {
     setModalConfig({ isOpen: true, mode, persona });
   };
@@ -122,57 +102,49 @@ const PersonalPage = () => {
     setModalConfig({ isOpen: false, mode: null, persona: null });
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // CRUD
-  // ═══════════════════════════════════════════════════════════════════════
-
   const handleCrearPersonal = async (formData) => {
-
-  if (esAdministrador(usuario.role) && !formData.oidGrupo) {
-    alert("Debe seleccionar un grupo");
-    return;
-  }
-
-  const payload = {
-    nombre: formData.nombre,
-    apellido: formData.apellido,
-    horasSemanales: Number(formData.horasSemanales),
-    tipoPersona: "Personal",
-    tipoPersonal: formData.tipoPersonal,
-    categoriaUTN: formData.categoriaUTN,
-  };
-
-  try {
-    const url = esAdministrador(usuario.role)
-      ? endpoints.CREAR(formData.oidGrupo)
-      : endpoints.CREAR;
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: construirHeaders(),
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) throw new Error(await response.text());
-
-    alert("Personal creado correctamente");
-    cerrarModal();
-    cargarPersonal();
-
-  } catch (error) {
-    console.error("❌ Error:", error);
-    alert(error.message);
-  }
-};
-
-
-  const handleEditarPersonal = async (formData) => {
+    if (esAdministrador(usuario.role) && !formData.oidGrupo) {
+      setAlert({ type: 'error', title: 'Error', message: 'Debe seleccionar un grupo' });
+      return;
+    }
 
     const payload = {
       nombre: formData.nombre,
       apellido: formData.apellido,
       horasSemanales: Number(formData.horasSemanales),
-      tipoPersona: "Personal",
+      tipoPersona: 'Personal',
+      tipoPersonal: formData.tipoPersonal,
+      categoriaUTN: formData.categoriaUTN,
+    };
+
+    try {
+      const url = esAdministrador(usuario.role)
+        ? endpoints.CREAR(formData.oidGrupo)
+        : endpoints.CREAR;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: construirHeaders(),
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error(await response.text());
+
+      cerrarModal();
+      cargarPersonal();
+      setAlert({ type: 'exito', title: 'Creado', message: 'Personal creado correctamente' });
+
+    } catch (err) {
+      setAlert({ type: 'error', title: 'Error', message: err.message });
+    }
+  };
+
+  const handleEditarPersonal = async (formData) => {
+    const payload = {
+      nombre: formData.nombre,
+      apellido: formData.apellido,
+      horasSemanales: Number(formData.horasSemanales),
+      tipoPersona: 'Personal',
       tipoPersonal: formData.tipoPersonal || null,
       categoriaUTN: formData.categoriaUTN || null,
     };
@@ -181,78 +153,55 @@ const PersonalPage = () => {
       const response = await fetch(
         endpoints.ACTUALIZAR(modalConfig.persona.oidPersona),
         {
-          method: "PUT",
+          method: 'PUT',
           headers: construirHeaders(),
           body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
+      if (!response.ok) throw new Error(await response.text());
 
-      alert("Personal actualizado correctamente");
       cerrarModal();
       cargarPersonal();
+      setAlert({ type: 'exito', title: 'Actualizado', message: 'Personal actualizado correctamente' });
 
-    } catch (error) {
-      console.error("❌ Error:", error);
-      alert(error.message);
+    } catch (err) {
+      setAlert({ type: 'error', title: 'Error', message: err.message });
     }
   };
 
+  const handleEliminarPersonal = (id) => {
+    setAlert({
+      type: 'advertencia',
+      title: 'Desactivar personal',
+      message: '¿Seguro que desea desactivar este personal?',
+      onAccept: async () => {
+        try {
+          const response = await fetch(endpoints.ELIMINAR(id), {
+            method: 'PUT',
+            headers: construirHeaders()
+          });
 
+          if (!response.ok) throw new Error(await response.text());
 
+          cargarPersonal();
+          setAlert({ type: 'exito', title: 'Desactivado', message: 'Personal quitado correctamente' });
 
-  const handleEliminarPersonal = async (id) => {
-
-  if (!window.confirm('¿Seguro que desea desactivar este personal?')) return;
-
-  try {
-    const response = await fetch(
-      endpoints.ELIMINAR(id),
-      {
-        method: 'PUT',
-        headers: construirHeaders()
+        } catch (err) {
+          setAlert({ type: 'error', title: 'Error', message: err.message });
+        }
       }
-    );
-
-    if (!response.ok) {
-      throw new Error(await response.text());
-    }
-
-    alert('Personal desactivado correctamente');
-    cargarPersonal();
-
-  } catch (error) {
-    console.error('❌ Error:', error);
-    alert(error.message);
-  }
-};
-
-  
+    });
+  };
 
   const handleFormSubmit = (formData) => {
     if (modalConfig.mode === 'crear') handleCrearPersonal(formData);
     if (modalConfig.mode === 'editar') handleEditarPersonal(formData);
   };
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════════════════════════════
-
   if (loading) return <p>Cargando personal...</p>;
-
-  if (error) return (
-    <div>
-      <p>Error: {error}</p>
-      <button onClick={cargarPersonal}>Reintentar</button>
-    </div>
-  );
-
-  if (!necesitaTabla(usuario.role)) {
-    return <p>No tienes permisos para ver personal</p>;
-  }
+  if (error) return <div><p>Error: {error}</p><button onClick={cargarPersonal}>Reintentar</button></div>;
+  if (!necesitaTabla(usuario.role)) return <p>No tienes permisos para ver personal</p>;
 
   return (
     <div className="personal-page">
@@ -284,21 +233,20 @@ const PersonalPage = () => {
 
       </div>
 
-
-{esAdministrador(usuario.role)
-  ? <PersonalTableAdmin
-      personal={personalPaginado}
-      onVer={(p) => abrirModal('ver', p)}
-      onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
-      onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
-    />
-  : <PersonalTable
-      personal={personalPaginado}
-      onVer={(p) => abrirModal('ver', p)}
-      onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
-      onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
-    />
-}
+      {esAdministrador(usuario.role)
+        ? <PersonalTableAdmin
+            personal={personalPaginado}
+            onVer={(p) => abrirModal('ver', p)}
+            onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
+            onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
+          />
+        : <PersonalTable
+            personal={personalPaginado}
+            onVer={(p) => abrirModal('ver', p)}
+            onEditar={permisos.editar ? (p) => abrirModal('editar', p) : null}
+            onEliminar={permisos.eliminar ? handleEliminarPersonal : null}
+          />
+      }
 
       {totalPages > 1 && (
         <PersonalPaginacion
@@ -310,29 +258,27 @@ const PersonalPage = () => {
 
       {modalConfig.isOpen && (
         <Modal
-  isOpen={modalConfig.isOpen}
-  onClose={cerrarModal}
-  title={
-    modalConfig.mode === 'crear' ? 'Nuevo Personal' :
-    modalConfig.mode === 'editar' ? 'Editar Personal' :
-    'Detalle del Personal'
-  }
-  buttons={
-    modalConfig.mode === 'ver'
-      ? [
-          { label: 'Cerrar', onClick: cerrarModal, variant: 'secondary' }
-        ]
-      : [
-          { label: 'Cancelar', onClick: cerrarModal, variant: 'secondary' },
-          {
-            label: modalConfig.mode === 'crear' ? 'Crear' : 'Guardar',
-            type: 'submit',
-            formId: 'personaForm',
-            variant: 'primary'
+          isOpen={modalConfig.isOpen}
+          onClose={cerrarModal}
+          title={
+            modalConfig.mode === 'crear' ? 'Nuevo Personal' :
+            modalConfig.mode === 'editar' ? 'Editar Personal' :
+            'Detalle del Personal'
           }
-        ]
-  }
->
+          buttons={
+            modalConfig.mode === 'ver'
+              ? [{ label: 'Cerrar', onClick: cerrarModal, variant: 'secondary' }]
+              : [
+                  { label: 'Cancelar', onClick: cerrarModal, variant: 'secondary' },
+                  {
+                    label: modalConfig.mode === 'crear' ? 'Crear' : 'Guardar',
+                    type: 'submit',
+                    formId: 'personaForm',
+                    variant: 'primary'
+                  }
+                ]
+          }
+        >
           <PersonaForm
             formId="personaForm"
             initialData={modalConfig.persona}
@@ -342,6 +288,20 @@ const PersonalPage = () => {
             grupos={grupos}
           />
         </Modal>
+      )}
+
+      {alert && (
+        <Alertas
+          type={alert.type}
+          title={alert.title}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+          onCancel={() => setAlert(null)}
+          onAccept={() => {
+            if (alert.onAccept) alert.onAccept();
+            setAlert(null);
+          }}
+        />
       )}
 
     </div>

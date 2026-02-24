@@ -1,7 +1,6 @@
 import './Sidebar.css';
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-//import Logo from '../../assets/logoUTN.png';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Secciones } from './Secciones/Secciones.jsx';
 import SubNavPersonal from './SubNavPersonal/SubNavPersonal.jsx';
 import Alerta from '../Alertas/Alertas.jsx';
@@ -9,18 +8,20 @@ import Alerta from '../Alertas/Alertas.jsx';
 const Sidebar = ({ onLogOut }) => {
     const navigate = useNavigate();
     const location = useLocation();
+
     const [alert, setAlert] = useState(null);
-    const [isExpanded, setIsExpanded] = useState(false); // Estado de expansión
+    const [isExpanded, setIsExpanded] = useState(false); 
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [showSubNav, setShowSubNav] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Datos del usuario
     const [usuario, setUsuario] = useState({
-        role: 'Director',
-        grupo: 'Grupo1',
-        email: 'correo@mail.com'
+        role: null,
+        grupo: null,
+        email: null
     });
+
+    const isSidebarExpanded = isExpanded || isMobileOpen;
 
     // Cargar datos del usuario
     useEffect(() => {
@@ -30,40 +31,36 @@ const Sidebar = ({ onLogOut }) => {
             setUsuario({
                 role: parsedData.role || null,
                 grupo: parsedData.grupo || null,
-                email: parsedData.email || 'Error: no email'
+                email: parsedData.email || 'Sin email'
             });
         }
     }, []);
 
-    // Función para manejar el clic en Personal
+    // Cerrar mobile cuando cambia la ruta
+    useEffect(() => {
+        setIsMobileOpen(false);
+    }, [location]);
+
+    // Cerrar SubNav cuando se colapsa
+    useEffect(() => {
+        if (!isSidebarExpanded) {
+            setShowSubNav(false);
+        }
+    }, [isSidebarExpanded]);
+
     const handlePersonalClick = (e) => {
         e.preventDefault();
         setShowSubNav(!showSubNav);
     };
 
-    // Función para cerrar el SubNav
     const handleCloseSubNav = () => {
         setShowSubNav(false);
         setSelectedCategory(null);
     };
 
-    // Cerrar mobile sidebar cuando cambie la ruta
-    useEffect(() => {
-        setIsMobileOpen(false);
-    }, [location]);
-
-    // Cerrar SubNav cuando se colapsa el sidebar
-    useEffect(() => {
-        if (!isExpanded) {
-            setShowSubNav(false);
-        }
-    }, [isExpanded]);
-
     const manejarLogout = () => {
         localStorage.removeItem("usuario");
-        if (onLogOut) {
-            onLogOut();
-        }
+        if (onLogOut) onLogOut();
         navigate("/login");
     };
 
@@ -71,7 +68,7 @@ const Sidebar = ({ onLogOut }) => {
         setAlert({
             type: 'advertencia',
             title: 'Atención',
-            message: 'Desea cerrar sesión?'
+            message: '¿Desea cerrar sesión?'
         });
     };
 
@@ -84,33 +81,33 @@ const Sidebar = ({ onLogOut }) => {
     };
 
     const handleCategorySelect = (categoryId) => {
-  let path = "/personas";
+        let path = "/personas";
 
-  switch (categoryId) {
-    case "investigadores":
-      path = "/personas/investigadores";
-      break;
-    case "personal":
-      path = "/personas/personal";
-      break;
-    case "consejo":
-      path = "/personas/integrantesConsejoEducativo";
-      break;
-    case "becarios":
-      path = "/personas/becarios";
-      break;
-    default:
-      path = "/personas";
-  }
+        switch (categoryId) {
+            case "investigadores":
+                path = "/personas/investigadores";
+                break;
+            case "personal":
+                path = "/personas/personal";
+                break;
+            case "consejo":
+                path = "/personas/integrantesConsejoEducativo";
+                break;
+            case "becarios":
+                path = "/personas/becarios";
+                break;
+            default:
+                path = "/personas";
+        }
 
-  navigate(path);
-  setShowSubNav(false);
-  setSelectedCategory(categoryId);
-};
+        navigate(path);
+        setShowSubNav(false);
+        setSelectedCategory(categoryId);
+    };
 
     return (
         <>
-            {/* Botón hamburguesa para mobile */}
+            {/* Botón hamburguesa */}
             <button 
                 className={`sidebar-toggle ${isMobileOpen ? 'active' : ''}`}
                 onClick={toggleMobileSidebar}
@@ -121,54 +118,57 @@ const Sidebar = ({ onLogOut }) => {
                 <span></span>
             </button>
 
-            {/* Backdrop para mobile */}
-            {isMobileOpen && <div className="sidebar-backdrop" onClick={closeMobileSidebar}></div>}
+            {/* Backdrop mobile */}
+            {isMobileOpen && (
+                <div 
+                    className="sidebar-backdrop" 
+                    onClick={closeMobileSidebar}
+                />
+            )}
 
-            {/* Sidebar con estado de expansión */}
             <aside 
-                className={`sidebar ${isExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'} ${isMobileOpen ? 'sidebar-mobile-open' : ''}`}
+                className={`sidebar ${isSidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'} ${isMobileOpen ? 'sidebar-mobile-open' : ''}`}
                 onMouseEnter={() => setIsExpanded(true)}
                 onMouseLeave={() => setIsExpanded(false)}
             >
-                {/* Header del sidebar con perfil */}
+                {/* HEADER */}
                 <div className="sidebar-header">
-                   {/* <Link className="sidebar-logo" to="/" onClick={closeMobileSidebar}>
-                        <img src={Logo} alt="Logo UTN" className="logo-image" />
-                    </Link>
-                   */}
-                    {isExpanded && (
-                      
+                    {isSidebarExpanded ? (
                         <div className="sidebar-profile">                            
                             <div className="profile-avatar">    
                                 <i className="fa-solid fa-user"></i>
                             </div>                            
                             <div className="profile-info">
-                                <span className="profile-name"><p>{usuario.email}</p></span>
-                                <span className="profile-group">{usuario.grupo || ""}</span>
-                                <span className="profile-role">{usuario.role || 'Usuario'}</span>
+                                <span className="profile-name">
+                                    {usuario.email}
+                                </span>
+
+                                <span className="profile-group">
+                                    {usuario.grupo?.nombreGrupo || "Sin grupo"}
+                                </span>
+
+                                <span className="profile-role">
+                                    {usuario.role || 'Usuario'}
+                                </span>
                             </div>
                         </div>
-
-                    )}
-
-                    {!isExpanded && (
+                    ) : (
                         <div className="profile-avatar-collapsed">
                             <i className="fa-solid fa-user"></i>
                         </div>
                     )}
                 </div>
 
-                {/* Navegación */}
+                {/* NAV */}
                 <nav className="sidebar-nav">
                     <Secciones 
                         closeMenu={closeMobileSidebar} 
                         onPersonalClick={handlePersonalClick} 
                         isPersonalActive={showSubNav}
-                        isExpanded={isExpanded}
+                        isExpanded={isSidebarExpanded}
                     />
 
-                    {/* SubNav integrado - solo visible cuando está expandido */}
-                    {showSubNav && isExpanded && (
+                    {showSubNav && isSidebarExpanded && (
                         <SubNavPersonal 
                             onCategorySelect={handleCategorySelect}
                             selectedCategory={selectedCategory}
@@ -177,7 +177,7 @@ const Sidebar = ({ onLogOut }) => {
                     )}
                 </nav>
 
-                {/* Footer del sidebar */}
+                {/* FOOTER */}
                 <div className="sidebar-footer">
                     <button 
                         onClick={handleLogoutFromPerfil}
@@ -185,22 +185,25 @@ const Sidebar = ({ onLogOut }) => {
                         title="Cerrar sesión"
                     >
                         <i className="fa-solid fa-right-from-bracket"></i>
-                        {isExpanded && <span>Cerrar sesión</span>}
+                        {isSidebarExpanded && <span>Cerrar sesión</span>}
                     </button>
                 </div>
-
-                {/* Alerta de confirmación */}
-                {alert && (
-                    <Alerta
-                        type={alert.type}
-                        title={alert.title}
-                        message={alert.message}
-                        onClose={() => setAlert(null)}
-                        onCancel={() => setAlert(null)}
-                        onAccept={() => { setAlert(null); manejarLogout(); }}
-                    />
-                )}
             </aside>
+
+            {/* ALERTA */}
+            {alert && (
+                <Alerta
+                    type={alert.type}
+                    title={alert.title}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                    onCancel={() => setAlert(null)}
+                    onAccept={() => { 
+                        setAlert(null); 
+                        manejarLogout(); 
+                    }}
+                />
+            )}
         </>
     );
 };
