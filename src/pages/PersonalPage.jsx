@@ -22,7 +22,7 @@ import AgregarIcon from '../assets/agregarEquipo.png';
 
 const PersonalPage = () => {
 
-  const itemsPorPagina = 10;
+  const itemsPorPagina = 6;
   const usuario = obtenerUsuario();
   const permisos = obtenerPermisosPersonal(usuario.role);
   const endpoints = obtenerEndpointsPersonal(usuario.role);

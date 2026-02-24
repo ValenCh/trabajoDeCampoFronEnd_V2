@@ -22,7 +22,7 @@ import AgregarIcon from '../assets/agregarEquipo.png';
 
 const BecariosPage = () => {
 
-  const itemsPorPagina = 10;
+  const itemsPorPagina = 6;
   const usuario = obtenerUsuario();
   const permisos = obtenerPermisosBecarios(usuario.role);
   const endpoints = obtenerEndpointsBecarios(usuario.role);

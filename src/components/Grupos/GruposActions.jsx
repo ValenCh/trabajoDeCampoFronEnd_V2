@@ -25,7 +25,7 @@ const GrupoActions = ({ grupo, onVer, onEditar, onEliminar }) => {
           onVer(grupo);
         }}
       >
-        <i className="fa-solid fa-magnifying-glass" />
+        <i className="fa-solid fa-eye" />
       </button>
 
       {/* Editar - solo si tiene permisos */}
@@ -38,11 +38,7 @@ const GrupoActions = ({ grupo, onVer, onEditar, onEliminar }) => {
             onEditar(grupo);
           }}
         >
-          <img
-            src={EditImg}
-            alt="Editar"
-            style={{ width: '18px', height: '18px', objectFit: 'contain' }}
-          />
+          <i className="fa-solid fa-pen-to-square" />
         </button>
       )}
 

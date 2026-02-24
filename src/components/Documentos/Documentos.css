@@ -27,6 +27,12 @@
 }
 
 /* ---- Botón agregar ---- */
+
+.btn-crear-documento{
+  background: rgba(255, 255, 255, 0);
+  border:rgba(0, 0, 0, 0.15)
+}
+
 .btn-add-documento {
   background: transparent;
   border: 2px solid;
