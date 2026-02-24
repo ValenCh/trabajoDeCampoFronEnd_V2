@@ -19,7 +19,7 @@ const GruposTable = ({ grupos, onVer, onEditar, onEliminar }) => {
   const columns = [
     {
       key: 'oidGrupo',
-      label: 'oidGrupo',
+      label: 'ID',
       width: '12%',
       className: 'col-id',
     },
