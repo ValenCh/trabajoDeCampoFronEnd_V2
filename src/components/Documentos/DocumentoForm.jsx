@@ -39,11 +39,11 @@ const DocumentoForm = ({
 
     setFormData(prev => ({
       ...prev,
-      titulo: initialData.titulo || '',
-      autores: initialData.autores || '',
+      titulo:    initialData.titulo    || '',
+      autores:   initialData.autores   || '',
       editorial: initialData.editorial || '',
-      anio: initialData.anio || '',
-      oidGrupo: grupoId ? String(grupoId) : ''
+      anio:      initialData.anio      || '',
+      oidGrupo:  grupoId ? String(grupoId) : ''
     }));
   }, [initialData, esAdmin, usuario.grupo]);
 
@@ -55,32 +55,25 @@ const DocumentoForm = ({
 
   const handleFileChange = (e) => {
     if (isReadOnly) return;
-    setFormData(prev => ({
-      ...prev,
-      archivo: e.target.files[0]
-    }));
+    setFormData(prev => ({ ...prev, archivo: e.target.files[0] }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (viewMode) return;
-
     const dataToSubmit = {
       ...formData,
       oidGrupo: esAdmin ? formData.oidGrupo : usuario.grupo?.oidGrupo
     };
-
     onSubmit(dataToSubmit);
   };
 
   return (
     <form id={formId} onSubmit={handleSubmit} className="documento-form">
-
       <div className="documento-form-grid">
 
         {/* TITULO */}
-        <div className="documento-form-field full-width">
+        <div className="documento-form-field">
           <label className="documento-form-label">
             Título <span className="req">*</span>
           </label>
@@ -137,13 +130,10 @@ const DocumentoForm = ({
           />
         </div>
 
-        {/* GRUPO */}
+        {/* GRUPO (solo admin) */}
         {esAdmin && (
-          <div className="documento-form-field full-width">
-            <label className="documento-form-label">
-              Grupo <span className="req">*</span>
-            </label>
-
+          <div className="documento-form-field">
+            <label className="documento-form-label">Grupo</label>
             {isReadOnly ? (
               <input
                 className="documento-input"
@@ -170,11 +160,10 @@ const DocumentoForm = ({
         )}
 
         {/* ARCHIVO */}
-        <div className="documento-form-field full-width">
+        <div className="documento-form-field">
           <label className="documento-form-label">
             Archivo <span className="req">*</span>
           </label>
-
           <div
             className={`documento-upload-box ${isReadOnly ? 'disabled' : ''}`}
             onClick={() => {
@@ -183,18 +172,13 @@ const DocumentoForm = ({
             }}
             style={{
               pointerEvents: isReadOnly ? 'none' : 'auto',
-              opacity: isReadOnly ? 0.6 : 1,
-              cursor: isReadOnly ? 'not-allowed' : 'pointer'
+              opacity:       isReadOnly ? 0.6    : 1,
+              cursor:        isReadOnly ? 'not-allowed' : 'pointer'
             }}
           >
             <img src={SubirArchivo} alt="Subir archivo" />
-            <span>
-              {formData.archivo
-                ? formData.archivo.name
-                : 'Archivo'}
-            </span>
+            <span>{formData.archivo ? formData.archivo.name : 'Archivo'}</span>
           </div>
-
           <input
             type="file"
             ref={fileInputRef}

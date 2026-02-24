@@ -12,42 +12,34 @@ const PersonaForm = ({
 }) => {
 
   const isReadOnly = modo === 'ver';
-  const usuario = obtenerUsuario();
-  const esAdmin = esAdministrador(usuario?.role);
+  const usuario    = obtenerUsuario();
+  const esAdmin    = esAdministrador(usuario?.role);
 
   const getInitialState = () => ({
-    nombre: '',
-    apellido: '',
-    horasSemanales: '',
-    tipoPersona: tipoPersona,
-    oidGrupo: '',
-
+    nombre:              '',
+    apellido:            '',
+    horasSemanales:      '',
+    tipoPersona:         tipoPersona,
+    oidGrupo:            '',
     // Investigador
-    categoriaUTN: '',
-    programaDeIncentivos: '',
-    dedicacion: '',
-    gradoAcademico: '',
-
+    categoriaUTN:        '',
+    programaDeIncentivos:'',
+    dedicacion:          '',
+    gradoAcademico:      '',
     // Becario
-    fuenteFinanciamiento: '',
-    tipoBecario: '',
-
+    fuenteFinanciamiento:'',
+    tipoBecario:         '',
     // Personal
-    tipoPersonal: '',
-
+    tipoPersonal:        '',
     // Consejo
-    cargo: ''
+    cargo:               ''
   });
 
   const [formData, setFormData] = useState(getInitialState());
 
   useEffect(() => {
     if (initialData) {
-      setFormData({
-        ...getInitialState(),
-        ...initialData,
-        tipoPersona: tipoPersona
-      });
+      setFormData({ ...getInitialState(), ...initialData, tipoPersona });
     } else {
       setFormData(getInitialState());
     }
@@ -71,8 +63,9 @@ const PersonaForm = ({
 
         {/* ===== CAMPOS COMUNES ===== */}
         <div className="persona-form-field">
-          <label>Nombre</label>
+          <label className="persona-form-label">Nombre</label>
           <input
+            className="persona-input"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
@@ -81,8 +74,9 @@ const PersonaForm = ({
         </div>
 
         <div className="persona-form-field">
-          <label>Apellido</label>
+          <label className="persona-form-label">Apellido</label>
           <input
+            className="persona-input"
             name="apellido"
             value={formData.apellido}
             onChange={handleChange}
@@ -91,8 +85,9 @@ const PersonaForm = ({
         </div>
 
         <div className="persona-form-field">
-          <label>Horas semanales</label>
+          <label className="persona-form-label">Horas semanales</label>
           <input
+            className="persona-input"
             type="number"
             name="horasSemanales"
             value={formData.horasSemanales}
@@ -104,8 +99,9 @@ const PersonaForm = ({
         {/* ===== GRUPO (solo admin) ===== */}
         {esAdmin && (
           <div className="persona-form-field">
-            <label>Grupo</label>
+            <label className="persona-form-label">Grupo</label>
             <select
+              className="persona-select"
               name="oidGrupo"
               value={formData.oidGrupo}
               onChange={handleChange}
@@ -125,8 +121,9 @@ const PersonaForm = ({
         {formData.tipoPersona === 'Investigador' && (
           <>
             <div className="persona-form-field">
-              <label>Categoría UTN</label>
+              <label className="persona-form-label">Categoría UTN</label>
               <input
+                className="persona-input"
                 name="categoriaUTN"
                 value={formData.categoriaUTN}
                 onChange={handleChange}
@@ -135,8 +132,9 @@ const PersonaForm = ({
             </div>
 
             <div className="persona-form-field">
-              <label>Programa de incentivos</label>
+              <label className="persona-form-label">Programa de incentivos</label>
               <input
+                className="persona-input"
                 name="programaDeIncentivos"
                 value={formData.programaDeIncentivos}
                 onChange={handleChange}
@@ -145,8 +143,9 @@ const PersonaForm = ({
             </div>
 
             <div className="persona-form-field">
-              <label>Dedicación</label>
+              <label className="persona-form-label">Dedicación</label>
               <input
+                className="persona-input"
                 name="dedicacion"
                 value={formData.dedicacion}
                 onChange={handleChange}
@@ -155,8 +154,9 @@ const PersonaForm = ({
             </div>
 
             <div className="persona-form-field">
-              <label>Grado académico</label>
+              <label className="persona-form-label">Grado académico</label>
               <input
+                className="persona-input"
                 name="gradoAcademico"
                 value={formData.gradoAcademico}
                 onChange={handleChange}
@@ -170,8 +170,9 @@ const PersonaForm = ({
         {formData.tipoPersona === 'Becario' && (
           <>
             <div className="persona-form-field">
-              <label>Fuente de financiamiento</label>
+              <label className="persona-form-label">Fuente de financiamiento</label>
               <input
+                className="persona-input"
                 name="fuenteFinanciamiento"
                 value={formData.fuenteFinanciamiento}
                 onChange={handleChange}
@@ -180,8 +181,9 @@ const PersonaForm = ({
             </div>
 
             <div className="persona-form-field">
-              <label>Tipo de becario</label>
+              <label className="persona-form-label">Tipo de becario</label>
               <select
+                className="persona-select"
                 name="tipoBecario"
                 value={formData.tipoBecario}
                 onChange={handleChange}
@@ -204,8 +206,9 @@ const PersonaForm = ({
         {/* ===== PERSONAL ===== */}
         {formData.tipoPersona === 'Personal' && (
           <div className="persona-form-field">
-            <label>Tipo de personal</label>
+            <label className="persona-form-label">Tipo de personal</label>
             <select
+              className="persona-select"
               name="tipoPersonal"
               value={formData.tipoPersonal}
               onChange={handleChange}
@@ -223,8 +226,9 @@ const PersonaForm = ({
         {/* ===== CONSEJO EDUCATIVO ===== */}
         {formData.tipoPersona === 'IntegranteConsejoEducativo' && (
           <div className="persona-form-field">
-            <label>Cargo</label>
+            <label className="persona-form-label">Cargo</label>
             <input
+              className="persona-input"
               name="cargo"
               value={formData.cargo}
               onChange={handleChange}

@@ -8,19 +8,19 @@ const EquipoForm = ({
   formId,
   disabled = {},
   showComparison = false,
-  grupos = [] // lista de grupos disponible solo para admin
+  grupos = []
 }) => {
 
   const usuario = obtenerUsuario();
   const esAdmin = usuario.role === 'ADMINISTRADOR';
 
   const [formData, setFormData] = useState({
-    denominacion: '',
-    descripcion: '',
+    denominacion:       '',
+    descripcion:        '',
     fechaIncorporacion: '',
-    montoInvertido: '',
-    oidGrupo: esAdmin ? '' : usuario.grupo?.oidGrupo || '',
-    activo: true
+    montoInvertido:     '',
+    oidGrupo:           esAdmin ? '' : usuario.grupo?.oidGrupo || '',
+    activo:             true
   });
 
   const originalData = useRef({});
@@ -34,12 +34,12 @@ const EquipoForm = ({
       : usuario.grupo?.oidGrupo || '';
 
     const data = {
-      denominacion: initialData.denominacion || '',
-      descripcion: initialData.descripcion || '',
+      denominacion:       initialData.denominacion       || '',
+      descripcion:        initialData.descripcion        || '',
       fechaIncorporacion: initialData.fechaIncorporacion || '',
-      montoInvertido: initialData.montoInvertido || '',
-      oidGrupo: grupoId ? String(grupoId) : '',
-      activo: initialData.activo ?? true
+      montoInvertido:     initialData.montoInvertido     || '',
+      oidGrupo:           grupoId ? String(grupoId) : '',
+      activo:             initialData.activo ?? true
     };
 
     setFormData(data);
@@ -54,9 +54,12 @@ const EquipoForm = ({
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.denominacion.trim()) newErrors.denominacion = 'La denominación es obligatoria';
-    if (esAdmin && !formData.oidGrupo) newErrors.oidGrupo = 'Debe seleccionar un grupo';
-    if (formData.montoInvertido && formData.montoInvertido < 0) newErrors.montoInvertido = 'El monto no puede ser negativo';
+    if (!formData.denominacion.trim())
+      newErrors.denominacion = 'La denominación es obligatoria';
+    if (esAdmin && !formData.oidGrupo)
+      newErrors.oidGrupo = 'Debe seleccionar un grupo';
+    if (formData.montoInvertido && formData.montoInvertido < 0)
+      newErrors.montoInvertido = 'El monto no puede ser negativo';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,7 +67,10 @@ const EquipoForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    const dataToSubmit = { ...formData, oidGrupo: esAdmin ? formData.oidGrupo : usuario.grupo?.oidGrupo };
+    const dataToSubmit = {
+      ...formData,
+      oidGrupo: esAdmin ? formData.oidGrupo : usuario.grupo?.oidGrupo
+    };
     onSubmit(dataToSubmit);
   };
 
@@ -72,8 +78,30 @@ const EquipoForm = ({
     <form id={formId} className="equipo-form" onSubmit={handleSubmit} noValidate>
       <div className="equipo-form-grid">
 
+                {/* GRUPO (solo admin) */}
+        {esAdmin && (
+          <div className="equipo-form-field">
+            <label className="equipo-form-label">Grupo *</label>
+            <select
+              name="oidGrupo"
+              className="equipo-input"
+              value={formData.oidGrupo}
+              onChange={handleChange}
+              disabled={disabled.oidGrupo}
+            >
+              <option value="">-- Seleccione un grupo --</option>
+              {grupos.map(g => (
+                <option key={g.oidGrupo} value={g.oidGrupo}>{g.sigla}</option>
+              ))}
+            </select>
+            {errors.oidGrupo && (
+              <span className="equipo-form-error">{errors.oidGrupo}</span>
+            )}
+          </div>
+        )}
+
         {/* DENOMINACIÓN */}
-        <div className="equipo-form-field full-width">
+        <div className="equipo-form-field">
           <label className="equipo-form-label">Denominación *</label>
           <input
             name="denominacion"
@@ -83,20 +111,9 @@ const EquipoForm = ({
             onChange={handleChange}
             disabled={disabled.denominacion}
           />
-          {errors.denominacion && <span className="equipo-form-error">{errors.denominacion}</span>}
-        </div>
-
-        {/* DESCRIPCIÓN */}
-        <div className="equipo-form-field full-width">
-          <label className="equipo-form-label">Descripción</label>
-          <textarea
-            name="descripcion"
-            className="equipo-input equipo-textarea"
-            value={formData.descripcion}
-            onChange={handleChange}
-            rows={4}
-            disabled={disabled.descripcion}
-          />
+          {errors.denominacion && (
+            <span className="equipo-form-error">{errors.denominacion}</span>
+          )}
         </div>
 
         {/* FECHA */}
@@ -106,7 +123,9 @@ const EquipoForm = ({
             type="date"
             name="fechaIncorporacion"
             className="equipo-input"
-            value={formData.fechaIncorporacion ? formData.fechaIncorporacion.split('T')[0] : ''}
+            value={formData.fechaIncorporacion
+              ? formData.fechaIncorporacion.split('T')[0]
+              : ''}
             onChange={handleChange}
             disabled={disabled.fechaIncorporacion}
           />
@@ -125,34 +144,30 @@ const EquipoForm = ({
             step="0.01"
             disabled={disabled.montoInvertido}
           />
-          {errors.montoInvertido && <span className="equipo-form-error">{errors.montoInvertido}</span>}
+          {errors.montoInvertido && (
+            <span className="equipo-form-error">{errors.montoInvertido}</span>
+          )}
         </div>
 
-        {/* GRUPO y ACTIVO (solo admin) */}
-        {esAdmin && (
-          <>
-            <div className="equipo-form-field full-width">
-              <label className="equipo-form-label">Grupo *</label>
-              <select
-                name="oidGrupo"
-                className="equipo-input"
-                value={formData.oidGrupo}
-                onChange={handleChange}
-                disabled={disabled.oidGrupo}
-              >
-                <option value="">-- Seleccione un grupo --</option>
-                {grupos.map(g => (
-                  <option key={g.oidGrupo} value={g.oidGrupo}>{g.sigla}</option>
-                ))}
-              </select>
-              {errors.oidGrupo && <span className="equipo-form-error">{errors.oidGrupo}</span>}
-            </div>
+                {/* DESCRIPCIÓN */}
+        <div className="equipo-form-field">
+          <label className="equipo-form-label">Descripción</label>
+          <textarea
+            name="descripcion"
+            className="equipo-input equipo-textarea"
+            value={formData.descripcion}
+            onChange={handleChange}
+            rows={4}
+            disabled={disabled.descripcion}
+          />
+        </div>
 
-            <div className="equipo-form-field">
-              <label className="equipo-form-label">Activo</label>
-              <span>{formData.activo ? 'Sí' : 'No'}</span>
-            </div>
-          </>
+        {/* ACTIVO (solo admin) */}
+        {esAdmin && (
+          <div className="equipo-form-field">
+            <label className="equipo-form-label">Activo</label>
+            <span>{formData.activo ? 'Sí' : 'No'}</span>
+          </div>
         )}
 
       </div>

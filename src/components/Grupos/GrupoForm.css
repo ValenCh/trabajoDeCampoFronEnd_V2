@@ -19,10 +19,6 @@
   gap: 6px;
 }
 
-.grupo-form-field.full-width {
-  grid-column: 1 / -1;
-}
-
 .grupo-form-label {
   font-size: 0.88rem;
   font-weight: 600;
@@ -34,10 +30,13 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .grupo-input:focus {
   border-color: #5a7fa8;
+  outline: none;
 }
 
 .grupo-textarea {
