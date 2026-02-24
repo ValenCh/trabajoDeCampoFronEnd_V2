@@ -13,7 +13,6 @@ export default function Login({ setUsuario }) {
     evento.preventDefault();
 
     try {
-      // Usamos la URL completa para consistencia
       const response = await fetch("http://localhost:8081/auth/login", {
         method: "POST",
         headers: { 
@@ -22,30 +21,21 @@ export default function Login({ setUsuario }) {
         body: JSON.stringify({ email, password })
       });
 
-      // console.log("✅ Respuesta recibida - Status:", response.status);
-
-      // Parsear la respuesta como JSON
       const data = await response.json();
-      // console.log("📄 Respuesta del servidor:", data);
 
-      // Si el servidor responde ok y trae el token
       if (response.ok && data.token) {
-        // ✅ CORRECCIÓN CRÍTICA: Usar "role" en lugar de "rol"
         const datosUsuario = { 
           email: email,
-          role: data.role || "Integrante",  // ← CAMBIO: "role" en inglés
-          grupo: data.grupo || null,         // ← MEJORA: Usar el grupo del backend si existe
+          role: data.role || "Integrante",
+          grupo: data.grupo || null,
           token: data.token,
           loggedIn: true
         };
-        
-        // console.log("✅ Datos del usuario guardados:", datosUsuario);
         
         localStorage.setItem("usuario", JSON.stringify(datosUsuario));
         setUsuario(datosUsuario); 
         navigate("/home");
       } else {
-        // Error del servidor
         setAlert({
           type: 'error',
           title: 'Error de Inicio de Sesión',
@@ -54,7 +44,6 @@ export default function Login({ setUsuario }) {
       }
 
     } catch (error) { 
-      // console.error("💥 Error:", error);
       setAlert({
         type: 'advertencia',
         title: 'Error de Conexión',
@@ -73,9 +62,7 @@ export default function Login({ setUsuario }) {
   }, [alert]);
 
   return (
-    <Log isLogin={true}>
-      <h1 className='txt'>Iniciar Sesión</h1>
-      
+    <Log isLogin={true} titulo="Iniciar Sesión">
       <form onSubmit={enviarDatos} className='formularioLogin'>
         <label htmlFor='login-email' className='formLabel'>
           <span>Email:</span>

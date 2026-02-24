@@ -32,7 +32,6 @@ export default function Register() {
     }
 
     try {
-      // Usamos la URL completa para evitar problemas con el proxy si falla
       const response = await fetch("http://localhost:8081/auth/register", {
         method: "POST",
         headers: { 
@@ -41,11 +40,7 @@ export default function Register() {
         body: JSON.stringify({ email, password })
       });
 
-      // console.log("✅ Respuesta recibida - Status:", response.status);
-
-      // ⭐ SOLUCIÓN: Primero obtener como texto
       const data = await response.text();
-      // console.log("📝 Respuesta del servidor:", data);
 
       if (response.ok) {
         setAlert({
@@ -65,7 +60,6 @@ export default function Register() {
       }
 
     } catch (error) {
-      //console.error("💥 Error:", error);
       setAlert({
         type: 'advertencia',
         title: 'Error de Conexión',
@@ -84,9 +78,7 @@ export default function Register() {
   }, [alert]);
 
   return (
-    <Log isLogin={false}>
-      <h1 className='txt'>Registrarse</h1>
-
+    <Log isLogin={false} titulo="Registrarse">
       <form onSubmit={enviarDatos} className='formularioLogin'>
         <label htmlFor='register-email' className='formLabel'>
           <span>Email:</span>

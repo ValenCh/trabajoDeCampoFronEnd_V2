@@ -3,19 +3,16 @@
 import './Log.css';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logIcon from '../../assets/log-icon.png';
 
-export default function Log({ children, isLogin }) {
+export default function Log({ children, isLogin, titulo }) {
   const [animating, setAnimating] = useState(false);
   const [animationClass, setAnimationClass] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Detecta cuando entramos desde otra ruta para aplicar animación de entrada
   useEffect(() => {
     const state = location.state;
     if (state?.from) {
-      // Animación de entrada usando animate.css
       setAnimationClass('animate__animated animate__flipInY');
       setAnimating(true);
       setTimeout(() => {
@@ -26,29 +23,39 @@ export default function Log({ children, isLogin }) {
   }, [location]);
 
   const handleToggle = () => {
-    // Animación de salida usando animate.css
     setAnimationClass('animate__animated animate__flipOutY');
     setAnimating(true);
-    
+
     setTimeout(() => {
       const targetRoute = isLogin ? "/register" : "/login";
       navigate(targetRoute, { state: { from: isLogin ? 'login' : 'register' } });
     }, 800);
   };
 
+  const navButtonLabel = isLogin ? "Ir a Registrarse" : "Ir a Iniciar Sesión";
 
   return (
-    <div 
-      className={`form ${animationClass}`} 
+    <div
+      className={`form ${animationClass}`}
       id={isLogin ? 'loginContainer' : 'singUpContainer'}
     >
-      <div className='cambiarDeLog'>
-        <button onClick={handleToggle} type='button' disabled={animating}>
-          <img className="logIcon" src={logIcon} alt={isLogin ? "Ir a Registro" : "Ir a Login"} />
-        </button>
-      </div>
-      
       <div className={`form-content ${animating ? 'content-animating' : ''}`}>
+
+        {/* Header: botón de navegación alineado a la izquierda del título */}
+        <div className="logHeader">
+          {/*<button
+            className="botonCambiarLog"
+            onClick={handleToggle}
+            type="button"
+            disabled={animating}
+          >
+          
+            {navButtonLabel}
+          </button>
+          */}
+          <h1 className="txt">{titulo}</h1>
+        </div>
+
         {children}
       </div>
     </div>
