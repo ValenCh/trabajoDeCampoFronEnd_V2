@@ -133,7 +133,7 @@ const DocumentoForm = ({
         {/* GRUPO (solo admin) */}
         {esAdmin && (
           <div className="documento-form-field">
-            <label className="documento-form-label">Grupo</label>
+            <label className="documento-form-label">Grupo <span className="req">*</span> </label>
             {isReadOnly ? (
               <input
                 className="documento-input"
