@@ -14,6 +14,7 @@ import BecariosPage from "./pages/BecariosPage.jsx";
 import InvestigadoresPage from "./pages/InvestigadoresPage.jsx";
 import PersonalPage from "./pages/PersonalPage.jsx";
 import MemoriasPage from "./pages/MemoriasPage.jsx";
+import UsuariosPage from "./pages/UsuariosPage.jsx";
 
 // Componente contenedor de la aplicación que maneja las rutas y el estado del usuario
 function ContenedorApp({ usuario, setUsuario }) {
@@ -100,6 +101,11 @@ function ContenedorApp({ usuario, setUsuario }) {
                 path="/memorias" 
                 element={<MemoriasPage />} 
                 />
+
+              <Route
+                path="/usuarios"
+                element={usuario?.role === 'ADMINISTRADOR' ? <UsuariosPage /> : <Navigate to="/home" />}
+              />
 
 
               <Route path="/memorias/:oidMemoria" element={<MemoriaDetallePage />} />
