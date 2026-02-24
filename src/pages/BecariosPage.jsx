@@ -69,7 +69,7 @@ const BecariosPage = () => {
       const data = await response.json();
       setGrupos(Array.isArray(data) ? data : [data]);
     } catch (err) {
-      console.error('❌ Error grupos:', err.message);
+      setAlert({ type: 'error', title: 'Error', message: err.message });
     }
   }, [endpointsGrupos]);
 

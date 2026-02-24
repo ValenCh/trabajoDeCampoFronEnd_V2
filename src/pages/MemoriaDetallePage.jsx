@@ -83,17 +83,23 @@ const MemoriaDetallePage = () => {
 
   const cargarPersonasMemoria = useCallback(async () => {
     try { setPersonasMemoria(await get(endpoints.LISTAR_PERSONAS(oidMemoria))); }
-    catch (err) { console.error('❌', err.message); }
+    catch (err) { 
+      setAlert({ type: 'error', title: 'Error', message: err.message }); 
+    }
   }, [oidMemoria, endpoints, get]);
 
   const cargarEquiposMemoria = useCallback(async () => {
     try { setEquiposMemoria(await get(endpoints.LISTAR_EQUIPOS(oidMemoria))); }
-    catch (err) { console.error('❌', err.message); }
+    catch (err) { 
+      setAlert({ type: 'error', title: 'Error', message: err.message }); 
+    }
   }, [oidMemoria, endpoints, get]);
 
   const cargarDocumentosMemoria = useCallback(async () => {
     try { setDocumentosMemoria(await get(endpoints.LISTAR_DOCUMENTOS(oidMemoria))); }
-    catch (err) { console.error('❌', err.message); }
+    catch (err) { 
+      setAlert({ type: 'error', title: 'Error', message: err.message }); 
+    }
   }, [oidMemoria, endpoints, get]);
 
   const cargarDisponibles = useCallback(async () => {
@@ -118,7 +124,7 @@ const MemoriaDetallePage = () => {
       setEquiposDisponibles(Array.isArray(equipos) ? equipos : []);
       setDocumentosDisponibles(Array.isArray(documentos) ? documentos : []);
     } catch (err) {
-      console.error('❌ Error disponibles:', err.message);
+      setAlert({ type: 'error', title: 'Error', message: err.message });
     }
   }, [puedeGestionar, usuario.role, endpointsEquipos, endpointsDocs, get]);
 
