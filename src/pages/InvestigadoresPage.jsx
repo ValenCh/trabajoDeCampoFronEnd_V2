@@ -69,7 +69,7 @@ const InvestigadoresPage = () => {
       const data = await response.json();
       setGrupos(Array.isArray(data) ? data : [data]);
     } catch (err) {
-      console.error('❌ Error grupos:', err.message);
+      setAlert({ type: 'error', title: 'Error Grupos', message: err.message });
     }
   }, [endpointsGrupos]);
 

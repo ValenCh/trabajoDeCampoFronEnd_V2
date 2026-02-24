@@ -41,11 +41,11 @@ export default function Register() {
         body: JSON.stringify({ email, password })
       });
 
-      console.log("✅ Respuesta recibida - Status:", response.status);
+      // console.log("✅ Respuesta recibida - Status:", response.status);
 
       // ⭐ SOLUCIÓN: Primero obtener como texto
       const data = await response.text();
-      console.log("📝 Respuesta del servidor:", data);
+      // console.log("📝 Respuesta del servidor:", data);
 
       if (response.ok) {
         setAlert({
@@ -65,7 +65,7 @@ export default function Register() {
       }
 
     } catch (error) {
-      console.error("💥 Error:", error);
+      //console.error("💥 Error:", error);
       setAlert({
         type: 'advertencia',
         title: 'Error de Conexión',

@@ -87,7 +87,7 @@ const EquiposPage = () => {
       setGrupos(Array.isArray(data) ? data : [data]);
 
     } catch (err) {
-      console.error(err);
+      setAlert({ type: 'error', title: 'Error', message: err.message });
     }
   }, [endpointsGrupos]);
 

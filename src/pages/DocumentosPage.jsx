@@ -58,7 +58,7 @@ const DocumentosPage = () => {
       const data = await response.json();
       setGrupos(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("❌ Error grupos:", err);
+      setAlert({ type: 'error', title: 'Error Grupos', message: err.message });
     }
   }, [usuario.role, endpointsGrupos]);
 
@@ -75,7 +75,7 @@ const DocumentosPage = () => {
       const data = await response.json();
       setDocumentos(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("❌ Error documentos:", err);
+      setAlert({ type: 'error', title: 'Error Documentos', message: err.message });
       setError(err.message);
     } finally {
       setLoading(false);

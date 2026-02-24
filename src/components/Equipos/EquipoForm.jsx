@@ -162,14 +162,6 @@ const EquipoForm = ({
           />
         </div>
 
-        {/* ACTIVO (solo admin) */}
-        {esAdmin && (
-          <div className="equipo-form-field">
-            <label className="equipo-form-label">Activo</label>
-            <span>{formData.activo ? 'Sí' : 'No'}</span>
-          </div>
-        )}
-
       </div>
     </form>
   );

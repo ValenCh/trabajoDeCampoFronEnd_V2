@@ -22,11 +22,11 @@ export default function Login({ setUsuario }) {
         body: JSON.stringify({ email, password })
       });
 
-      console.log("✅ Respuesta recibida - Status:", response.status);
+      // console.log("✅ Respuesta recibida - Status:", response.status);
 
       // Parsear la respuesta como JSON
       const data = await response.json();
-      console.log("📄 Respuesta del servidor:", data);
+      // console.log("📄 Respuesta del servidor:", data);
 
       // Si el servidor responde ok y trae el token
       if (response.ok && data.token) {
@@ -39,7 +39,7 @@ export default function Login({ setUsuario }) {
           loggedIn: true
         };
         
-        console.log("✅ Datos del usuario guardados:", datosUsuario);
+        // console.log("✅ Datos del usuario guardados:", datosUsuario);
         
         localStorage.setItem("usuario", JSON.stringify(datosUsuario));
         setUsuario(datosUsuario); 
@@ -54,7 +54,7 @@ export default function Login({ setUsuario }) {
       }
 
     } catch (error) { 
-      console.error("💥 Error:", error);
+      // console.error("💥 Error:", error);
       setAlert({
         type: 'advertencia',
         title: 'Error de Conexión',
