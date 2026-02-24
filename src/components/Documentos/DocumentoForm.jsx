@@ -141,7 +141,7 @@ const DocumentoForm = ({
         {esAdmin && (
           <div className="documento-form-field full-width">
             <label className="documento-form-label">
-              Grupo
+              Grupo <span className="req">*</span>
             </label>
 
             {isReadOnly ? (

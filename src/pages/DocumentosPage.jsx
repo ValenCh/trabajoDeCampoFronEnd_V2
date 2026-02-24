@@ -125,18 +125,38 @@ const DocumentosPage = () => {
     try {
       const usuario = obtenerUsuario();
       const esAdmin = usuario.role === 'ADMINISTRADOR';
+      const anioActual = new Date().getFullYear();
+      const grupoSeleccionado = esAdmin ? formData.oidGrupo : usuario.grupo?.oidGrupo;
+      const anioDocumento = Number(formData.anio);
+
+      if (!formData.titulo?.trim()) {
+        setAlert({ type: 'error', title: 'Error', message: 'El título es obligatorio' });
+        return;
+      }
+
+      if (!formData.archivo) {
+        setAlert({ type: 'error', title: 'Error', message: 'Debe adjuntar un archivo' });
+        return;
+      }
+
+      if (!grupoSeleccionado) {
+        setAlert({ type: 'error', title: 'Error', message: 'Debe seleccionar un grupo' });
+        return;
+      }
+
+      if (formData.anio && (Number.isNaN(anioDocumento) || anioDocumento > anioActual)) {
+        setAlert({ type: 'error', title: 'Error', message: `El año no puede ser mayor a ${anioActual}` });
+        return;
+      }
 
       let url = endpoints.CREAR;
 
       if (esAdmin) {
-        if (!formData.oidGrupo) {
-          setAlert({ type: 'error', title: 'Error', message: 'Debe seleccionar un grupo' });
-          return;
-        }
-        url = endpoints.CREAR(formData.oidGrupo);
+        url = endpoints.CREAR(grupoSeleccionado);
       }
 
-      const { oidGrupo, ...documentoData } = formData;
+      const documentoData = { ...formData };
+      delete documentoData.oidGrupo;
 
       const data = new FormData();
       data.append("documento", new Blob([JSON.stringify(documentoData)], { type: "application/json" }));
@@ -148,7 +168,9 @@ const DocumentosPage = () => {
         body: data
       });
 
-      if (!response.ok) throw new Error(await response.text());
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
 
       cerrarModal();
       cargarDocumentos();
