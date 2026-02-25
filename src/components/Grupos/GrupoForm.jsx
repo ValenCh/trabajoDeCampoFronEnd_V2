@@ -187,7 +187,7 @@ const GrupoForm = ({
           )}
         </div>
 
-                {/* Organigrama */}
+        {/* Organigrama */}
         <div className="grupo-form-field">
           <label htmlFor="gf-organigrama" className="grupo-form-label">
             Organigrama

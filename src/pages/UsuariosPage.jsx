@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Alertas from '../components/Alertas/Alertas';
 import { construirHeaders } from '../config/permissions';
-import './UsuariosPage.css';
+import '../components/Usuarios/Usuarios.css';
 
 const ROLES = ['ADMINISTRADOR', 'DIRECTOR', 'VICEDIRECTOR', 'INTEGRANTE'];
 const TIPOS_PERSONA = ['Becario', 'Investigador', 'Personal', 'IntegranteConsejoEducativo'];
@@ -148,7 +148,7 @@ const UsuariosPage = () => {
       setAlert({
         type: 'exito',
         title: 'Éxito',
-        message: mensaje || 'Usuario creado y asociado a persona correctamente'
+        message: 'Usuario creado y asociado a persona correctamente'
       });
     } catch (err) {
       setAlert({ type: 'error', title: 'Error', message: err.message });
@@ -162,90 +162,105 @@ const UsuariosPage = () => {
       <h1 className="usuarios-title">Administración de Usuarios</h1>
 
       <form className="usuarios-form" onSubmit={handleSubmit}>
-        <h2>Cuenta</h2>
-        <div className="usuarios-grid">
-          <label>
-            Email *
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          </label>
-          <label>
-            Contraseña *
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </label>
-          <label>
-            Confirmar contraseña *
-            <input type="password" value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} required />
-          </label>
-          <label>
-            Rol *
-            <select value={role} onChange={(e) => setRole(e.target.value)} required>
-              <option value="">-- Seleccionar rol --</option>
-              {ROLES.map((rol) => (
-                <option key={rol} value={rol}>
-                  {rol}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Grupo *
-            <select value={grupoSeleccionado} onChange={(e) => setGrupoSeleccionado(e.target.value)} required>
-              <option value="">-- Seleccionar grupo --</option>
-              {grupos.map((grupo) => (
-                <option key={grupo.oidGrupo} value={grupo.oidGrupo}>
-                  {grupo.nombreGrupo || `Grupo ${grupo.oidGrupo}`}
-                </option>
-              ))}
-            </select>
-          </label>
+
+        {/* Card: Cuenta */}
+        <div className="usuarios-card">
+          <div className="usuarios-card-header">
+            <h2 className="usuarios-card-title">Cuenta</h2>
+          </div>
+          <div className="usuarios-grid">
+            <label>
+              Email *
+              <input type="email" placeholder='example@mail.com' value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </label>
+            <label>
+              Contraseña *
+              <input type="password" placeholder='*****' value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </label>
+            <label>
+              Confirmar contraseña *
+              <input type="password" placeholder='*****' value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} required />
+            </label>
+            <label>
+              Rol *
+              <select value={role} onChange={(e) => setRole(e.target.value)} required>
+                <option value="">-- Seleccionar rol --</option>
+                {ROLES.map((rol) => (
+                  <option key={rol} value={rol}>
+                    {rol}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Grupo *
+              <select value={grupoSeleccionado} onChange={(e) => setGrupoSeleccionado(e.target.value)} required>
+                <option value="">-- Seleccionar grupo --</option>
+                {grupos.map((grupo) => (
+                  <option key={grupo.oidGrupo} value={grupo.oidGrupo}>
+                    {grupo.nombreGrupo || `Grupo ${grupo.oidGrupo}`}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </div>
 
-        <h2>Persona asociada</h2>
-        <div className="usuarios-grid">
-          <label>
-            Nombre
-            <input name="nombre" type="text" value={persona.nombre} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Apellido
-            <input name="apellido" type="text" value={persona.apellido} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Horas semanales
-            <input name="horasSemanales" type="number" value={persona.horasSemanales} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Tipo de persona
-            <select name="tipoPersona" value={persona.tipoPersona} onChange={handlePersonaChange}>
-              <option value="">-- Seleccionar tipo --</option>
-              {TIPOS_PERSONA.map((tipo) => (
-                <option key={tipo} value={tipo}>
-                  {tipo}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Categoría UTN
-            <input name="categoriaUTN" type="text" value={persona.categoriaUTN} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Programa de incentivos
-            <input name="programaDeIncentivos" type="text" value={persona.programaDeIncentivos} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Dedicación
-            <input name="dedicacion" type="text" value={persona.dedicacion} onChange={handlePersonaChange} />
-          </label>
-          <label>
-            Grado académico
-            <input name="gradoAcademico" type="text" value={persona.gradoAcademico} onChange={handlePersonaChange} />
-          </label>
+        {/* Card: Persona asociada */}
+        <div className="usuarios-card">
+          <div className="usuarios-card-header">
+            <h2 className="usuarios-card-title">Persona asociada</h2>
+          </div>
+          <div className="usuarios-grid">
+            <label>
+              Nombre
+              <input placeholder='nombre' name="nombre" type="text" value={persona.nombre} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Apellido
+              <input placeholder='apellido' name="apellido" type="text" value={persona.apellido} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Horas semanales
+              <input placeholder='00' name="horasSemanales" type="number" value={persona.horasSemanales} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Tipo de persona
+              <select name="tipoPersona" value={persona.tipoPersona} onChange={handlePersonaChange}>
+                <option value="">-- Seleccionar tipo --</option>
+                {TIPOS_PERSONA.map((tipo) => (
+                  <option key={tipo} value={tipo}>
+                    {tipo}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Categoría UTN
+              <input placeholder='categoria' name="categoriaUTN" type="text" value={persona.categoriaUTN} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Programa de incentivos
+              <input placeholder='programa de incentivos' name="programaDeIncentivos" type="text" value={persona.programaDeIncentivos} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Dedicación
+              <input placeholder='dedicación' name="dedicacion" type="text" value={persona.dedicacion} onChange={handlePersonaChange} />
+            </label>
+            <label>
+              Grado académico
+              <input placeholder='grado académico' name="gradoAcademico" type="text" value={persona.gradoAcademico} onChange={handlePersonaChange} />
+            </label>
+          </div>
         </div>
 
-        <button type="submit" className="usuarios-submit" disabled={loading}>
-          {loading ? 'Guardando...' : 'Crear usuario y asociar persona'}
-        </button>
+        {/* Botón de envío */}
+        <div className="usuarios-submit-wrapper">
+          <button type="submit" className="usuarios-submit" disabled={loading}>
+            {loading ? 'Guardando...' : 'Crear usuario y asociar persona'}
+          </button>
+        </div>
+
       </form>
 
       {alert && (
