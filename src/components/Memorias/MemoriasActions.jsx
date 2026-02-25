@@ -1,19 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { obtenerUsuario, ROLES } from '../../config/permissions';
 
 const MemoriasActions = ({ memoria, onExportar, permisos }) => {
   const navigate = useNavigate();
+  const { role } = obtenerUsuario();
+
+  const puedeVer = role !== ROLES.VICEDIRECTOR && role !== ROLES.INTEGRANTE;
 
   return (
     <div className="memorias-actions">
 
-      <button
-        className="documento-action-btn btn-ver"
-        title="Ver memoria"
-        onClick={() => navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'ver' } })}
-      >
-        <i className="fa-solid fa-eye" />
-      </button>
+      {puedeVer && (
+        <button
+          className="documento-action-btn btn-ver"
+          title="Ver memoria"
+          onClick={() => navigate(`/memorias/${memoria.oidMemoria}`, { state: { modo: 'ver' } })}
+        >
+          <i className="fa-solid fa-eye" />
+        </button>
+      )}
 
       {permisos?.editar && (
         <button

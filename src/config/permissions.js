@@ -642,6 +642,7 @@ export const PERMISOS_MEMORIAS ={
 
  [ROLES.ADMINISTRADOR]: {
       verTodos: true,
+      ver:true,
       crear: true,
       editar: true,
       eliminar: true,
@@ -652,6 +653,7 @@ export const PERMISOS_MEMORIAS ={
 
   [ROLES.DIRECTOR]: {
       verTodos: false,
+      ver:true,
       crear: true,
       editar: true,
       eliminar: true,
@@ -661,6 +663,7 @@ export const PERMISOS_MEMORIAS ={
 
     [ROLES.VICEDIRECTOR]: {
       verTodos: false,
+      ver:false,
       crear: false,
       editar: false,
       eliminar: false,
@@ -670,6 +673,7 @@ export const PERMISOS_MEMORIAS ={
 
     [ROLES.INTEGRANTE]: {
       verTodos: false,
+      ver:false,
       crear: false,
       editar: false,
       eliminar: false,
