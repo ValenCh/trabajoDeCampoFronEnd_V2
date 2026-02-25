@@ -38,6 +38,17 @@ const COLUMNAS_DOCUMENTOS = [
   { key: 'anio',   label: 'Año' },
 ];
 
+const normalizarPersona = (persona, tipoPersona) => ({
+  ...persona,
+  oidPersona:
+    persona.oidPersona
+    || persona.oidBecario
+    || persona.oidInvestigador
+    || persona.oidIntegranteConsejoEducativo
+    || persona.oidPersonal,
+  tipoPersona
+});
+
 const MemoriaDetallePage = () => {
 
   const { oidMemoria } = useParams();
@@ -116,11 +127,12 @@ const MemoriaDetallePage = () => {
         ]);
 
       setPersonasDisponibles([
-        ...becarios.map(p => ({ ...p, tipoPersona: 'Becario' })),
-        ...investigadores.map(p => ({ ...p, tipoPersona: 'Investigador' })),
-        ...integrantesCE.map(p => ({ ...p, tipoPersona: 'IntegranteCE' })),
-        ...personal.map(p => ({ ...p, tipoPersona: 'Personal' })),
+        ...becarios.map(p => normalizarPersona(p, 'Becario')),
+        ...investigadores.map(p => normalizarPersona(p, 'Investigador')),
+        ...integrantesCE.map(p => normalizarPersona(p, 'IntegranteConsejoEducativo')),
+        ...personal.map(p => normalizarPersona(p, 'Personal')),
       ]);
+
       setEquiposDisponibles(Array.isArray(equipos) ? equipos : []);
       setDocumentosDisponibles(Array.isArray(documentos) ? documentos : []);
     } catch (err) {

@@ -90,7 +90,7 @@ export const ENDPOINTS = {
       LISTAR: `${BASE_URL}/administrador/memorias/listadoMemorias`,
       CREAR: (oidGrupo, anio) => `${BASE_URL}/administrador/memorias/crearMemoria/${oidGrupo}/${anio}`,
       OBTENER: (oidMemoria) => `${BASE_URL}/administrador/memorias/obtenerMemoria/${oidMemoria}`,
-          // personas
+      // personas
       LISTAR_PERSONAS: (oidMemoria) => `${BASE_URL}/administrador/memorias/${oidMemoria}/listadoPersonas`,
       AGREGAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/administrador/memorias/${oidMemoria}/agregarPersona/${oidPersona}`,
       QUITAR_PERSONA: (oidMemoria, oidPersona) => `${BASE_URL}/administrador/memorias/${oidMemoria}/quitarPersona/${oidPersona}`,
