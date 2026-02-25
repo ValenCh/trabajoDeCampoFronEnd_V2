@@ -162,8 +162,7 @@ const GruposPage = () => {
           setAlert({ type: 'exito', title: 'Eliminado', message: 'Grupo eliminado correctamente' });
 
         } catch (err) {
-          setAlert({ type: 'error', title: 'Error', message: err.message });
-        }
+            setAlert({ type: 'error', title: 'Error', message: 'No puedes eliminar un grupo que tiene elementos asociados'});        }
       }
     });
   };

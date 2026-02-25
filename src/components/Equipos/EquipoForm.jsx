@@ -14,6 +14,10 @@ const EquipoForm = ({
   const usuario = obtenerUsuario();
   const esAdmin = usuario.role === 'ADMINISTRADOR';
 
+  const inicializado = useRef(false);
+  const originalData = useRef({});
+  const [errors, setErrors] = useState({});
+
   const [formData, setFormData] = useState({
     denominacion:       '',
     descripcion:        '',
@@ -23,11 +27,9 @@ const EquipoForm = ({
     activo:             true
   });
 
-  const originalData = useRef({});
-  const [errors, setErrors] = useState({});
-
   useEffect(() => {
-    if (!initialData) return;
+    if (!initialData || inicializado.current) return;
+    inicializado.current = true;
 
     const grupoId = esAdmin
       ? initialData.oidGrupo || initialData?.grupo?.oidGrupo || ''
@@ -44,7 +46,7 @@ const EquipoForm = ({
 
     setFormData(data);
     originalData.current = { ...data };
-  }, [initialData, esAdmin, usuario.grupo]);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +80,7 @@ const EquipoForm = ({
     <form id={formId} className="equipo-form" onSubmit={handleSubmit} noValidate>
       <div className="equipo-form-grid">
 
-                {/* GRUPO (solo admin) */}
+        {/* GRUPO (solo admin) */}
         {esAdmin && (
           <div className="equipo-form-field">
             <label className="equipo-form-label">Grupo *</label>
@@ -149,7 +151,7 @@ const EquipoForm = ({
           )}
         </div>
 
-                {/* DESCRIPCIÓN */}
+        {/* DESCRIPCIÓN */}
         <div className="equipo-form-field">
           <label className="equipo-form-label">Descripción</label>
           <textarea

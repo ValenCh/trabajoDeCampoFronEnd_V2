@@ -17,6 +17,7 @@ const DocumentoForm = ({
   const esAdmin = usuario.role === 'ADMINISTRADOR';
 
   const fileInputRef = useRef(null);
+  const inicializado = useRef(false);
 
   const isReadOnly = viewMode || deleteMode;
   const isDisabled = (field) => isReadOnly || disabled[field];
@@ -31,7 +32,8 @@ const DocumentoForm = ({
   });
 
   useEffect(() => {
-    if (!initialData) return;
+    if (!initialData || inicializado.current) return;
+    inicializado.current = true;
 
     const grupoId = esAdmin
       ? initialData.grupo?.oidGrupo || ''
@@ -45,7 +47,7 @@ const DocumentoForm = ({
       anio:      initialData.anio      || '',
       oidGrupo:  grupoId ? String(grupoId) : ''
     }));
-  }, [initialData, esAdmin, usuario.grupo]);
+  }, [initialData]);
 
   const handleChange = (e) => {
     if (isReadOnly) return;
@@ -133,7 +135,7 @@ const DocumentoForm = ({
         {/* GRUPO (solo admin) */}
         {esAdmin && (
           <div className="documento-form-field">
-            <label className="documento-form-label">Grupo <span className="req">*</span> </label>
+            <label className="documento-form-label">Grupo <span className="req">*</span></label>
             {isReadOnly ? (
               <input
                 className="documento-input"
