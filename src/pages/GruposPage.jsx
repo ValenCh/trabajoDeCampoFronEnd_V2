@@ -289,11 +289,12 @@ const GruposPage = () => {
           {grupoUnico ? (
             <div className="grupo-detalle-container">
               <div className="grupo-detalle-header">
-                <h2>{grupoUnico.nombreGrupo}</h2>
+                <h2 className="grupo-detalle-title">{grupoUnico.nombreGrupo}</h2>
                 <span className="grupo-sigla-badge">{grupoUnico.sigla}</span>
               </div>
+
               <div className="grupo-section">
-                <div className='grupo-grid'>
+                <div className="grupo-grid">
                   <div className="grupo-field">
                     <span className="field-label">Email</span>
                     <span className="field-value">{grupoUnico.email}</span>
@@ -341,7 +342,6 @@ const GruposPage = () => {
           </button>
         )}
       </div>
-      
 
       <GruposTable
         grupos={gruposPaginados}
